@@ -21,19 +21,25 @@ def date_of_easter(year: int) -> tuple:
   return (day, month, year)
 
 def date_to_day_number(month: int, day: int, leap_year: bool) -> int:
+
   if month > 2:
+
     j = math.floor((month + 1) * 30.6)
+
     if (leap_year):
       k = j - 62
     else:
       k = j - 63
+
     return k + day
+  
   else:
     if (leap_year):
       d = (month - 1) * 62
     else:
       d = (month - 1) * 63
     f = math.floor(d / 2)
+
     return f + day
     
 
