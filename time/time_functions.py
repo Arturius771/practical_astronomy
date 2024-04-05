@@ -37,3 +37,27 @@ def date_to_day_number(month: int, day: int, leap_year: bool) -> int:
     return f + day
     
 
+def greenwich_date_to_julian_date(year: int, month: int, day: float | int) -> float:
+  if month == 1 or month == 2:
+    y = year -1
+    m = month + 12
+  else:
+    y = year
+    m = month
+
+  if year > 1582 or year == 1582 and month > 10 or year == 1582 and month == 10 and day > 15:
+    a = math.floor(y / 100)
+    b = 2 - a + math.floor(a / 4)
+  else:
+    b = 0
+  
+  if y < 0:
+    c = math.floor((365.25 * y) - 0.75)
+  else:
+    c = math.floor(365.25 * y)
+
+  d = math.floor(30.6001 * (m + 1))
+
+  jd = b + c + d + day + 1720994.5
+
+  return jd
