@@ -40,8 +40,7 @@ def date_to_day_number(month: int, day: int, leap_year: bool) -> int:
       d = (month - 1) * 63
     f = math.floor(d / 2)
 
-    return f + day
-    
+    return f + day    
 
 def greenwich_date_to_julian_date(year: int, month: int, day: float | int) -> float:
   if month == 1 or month == 2:
