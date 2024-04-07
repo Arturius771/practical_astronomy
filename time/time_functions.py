@@ -122,3 +122,29 @@ def convert_decimal_hours_to_hours_minutes_seconds(decimalTime: float) -> tuple:
   hours = unsigned_hours * -1 if decimalTime < 0 else unsigned_hours
 
   return (hours, minutes, seconds)
+
+def convert_local_civil_time_to_universal_time(local_year: int, local_month: int, local_day: int, local_hours: int, local_minutes: int, local_seconds: float, daylight_savings_correction = 0, timezone_offset = 0) -> tuple:
+
+  zone_time = local_hours - daylight_savings_correction
+  decimal_zone_time = convert_hours_minute_seconds_to_decimal_time(zone_time, local_minutes, local_seconds)
+  ut = decimal_zone_time - timezone_offset
+  greenwich_calendar_day = local_day + (ut / 24)
+  jd = greenwich_date_to_julian_date(local_year, local_month, greenwich_calendar_day)
+  greenwich_date = julian_date_to_greenwich_date(jd)
+  utc = convert_decimal_hours_to_hours_minutes_seconds(24 * (greenwich_calendar_day - math.floor(greenwich_calendar_day)))
+
+  return (greenwich_date[0], greenwich_date[1], math.floor(greenwich_date[2])) + utc
+
+def convert_universal_time_to_local_civil_time(ut_hours: int, ut_minutes: int, ut_seconds: int, greenwich_year: int, greenwich_month: int, greenwich_day: int, timezone_offset = 0, daylight_savings_correction = 0) -> tuple:
+  decimalHours = convert_hours_minute_seconds_to_decimal_time(ut_hours, ut_minutes, ut_seconds)
+  lct = decimalHours + timezone_offset + daylight_savings_correction
+  jd = greenwich_date_to_julian_date(greenwich_year,greenwich_month,greenwich_day)
+  ljd = jd + (lct / 24)
+  local_civil_date = julian_date_to_greenwich_date(ljd)
+  integer_day = math.floor(local_civil_date[2])
+  local_date = (local_civil_date[0], local_civil_date[1], integer_day)
+  lct = convert_decimal_hours_to_hours_minutes_seconds((local_civil_date[2] - integer_day) * 24)
+  
+  return local_date + (lct)
+
+  

@@ -41,7 +41,17 @@ class TestDateMethods(unittest.TestCase):
   def test_convert_decimal_hours_to_hours_minutes_seconds(self):
     msg = 'test_convert_decimal_hours_to_hours_minutes_seconds fail'
 
-    self.assertEqual(time_functions.convert_decimal_hours_to_hours_minutes_seconds(18.52416667), (18, 31, 27.0), msg)
+    self.assertEqual(time_functions.convert_decimal_hours_to_hours_minutes_seconds(18.52416667), (18, 31, 27), msg)
+
+  def test_convert_local_civil_time_to_universal_time(self):
+    msg = 'test_convert_local_civil_time_to_universal_time fail'
+
+    self.assertEqual(time_functions.convert_local_civil_time_to_universal_time(2013,7,1,3,37,5,1,4), (2013, 6, 30, 22, 37, 5.0), msg)
+
+  def test_convert_universal_time_to_local_civil_time(self):
+    msg = 'test_convert_universal_time_to_local_civil_time fail'
+
+    self.assertEqual(time_functions.convert_universal_time_to_local_civil_time(22,37,0,2013,6,30,4,1), (2013, 7, 1, 3, 37, 0), msg)
 
 
 if __name__ == '__main__':
