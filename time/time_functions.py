@@ -66,3 +66,59 @@ def greenwich_date_to_julian_date(year: int, month: int, day: float | int) -> fl
   jd = b + c + d + day + 1720994.5
 
   return jd
+
+def julian_date_to_greenwich_date(julianDate: float) -> tuple:
+  
+  jd = julianDate + 0.5
+  i = math.floor(jd)
+  f = jd - i
+  
+  if i > 2299160:
+    a = math.floor((i - 1867216.25) / 36524.25)
+    b = i + a - math.floor(a / 4) + 1
+  else:
+    b = 1
+
+  c = b + 1524
+  d = math.floor((c - 122.1) / 365.25)
+  e = math.floor(365.25 * d)
+  g = math.floor((c - e) / 30.6001)
+
+  day = c - e + f - math.floor(30.6001 * g)
+
+  month = g - 1 if g < 13.5 else g - 13
+
+  year = d - 4716 if month > 2.5 else d - 4715
+
+  return (year, month, day)
+
+def finding_day_of_week(year: int, month: int, day: float) -> str:
+  jd = greenwich_date_to_julian_date(year, month, day)
+  a = (jd + 1.5) % 7
+
+  if a < 1: return "Sunday"
+  if a < 2: return "Monday"
+  if a < 3: return "Tuesday"
+  if a < 4: return "Wednesday"
+  if a < 5: return "Thursday"
+  if a < 6: return "Friday"
+  if a < 7: return "Saturday"
+
+def convert_hours_minute_seconds_to_decimal_time(hours: int, minutes: int, seconds: int, twenty_four_hour_clock = True) -> float:
+  a = seconds / 60
+  b = (a + minutes) / 60
+  c = b + hours
+
+  return c if twenty_four_hour_clock else c + 12
+
+def convert_decimal_hours_to_hours_minutes_seconds(decimalTime: float) -> tuple:
+  a = abs(decimalTime)
+  b = a * 3600
+  c = round((b % 60), 2)
+  seconds = 0 if c == 60 else c
+  e = b + 60 if c == 60 else b
+  minutes = math.floor((e) / 60) % 60
+  unsigned_hours = math.floor(e / 3600)
+  hours = unsigned_hours * -1 if decimalTime < 0 else unsigned_hours
+
+  return (hours, minutes, seconds)
