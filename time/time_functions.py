@@ -20,7 +20,7 @@ def date_of_easter(year: int) -> tuple:
 
   return (day, month, year)
 
-def date_to_day_number(month: int, day: int, leap_year: bool) -> int:
+def date_to_day_number(month: int, day: int, leap_year = False) -> int:
 
   if month > 2:
 
