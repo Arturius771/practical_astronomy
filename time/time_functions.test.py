@@ -1,7 +1,7 @@
 import unittest
 import time_functions
 
-class TestDateMethods(unittest.TestCase):
+class TimeTestMethods(unittest.TestCase):
 
   def test_date_of_easter(self):
     msg = 'test_date_of_easter fail'
