@@ -92,9 +92,8 @@ def julian_date_to_greenwich_date(julianDate: float) -> tuple:
 
   return (year, month, day)
 
-def finding_day_of_week(year: int, month: int, day: float) -> str:
-  jd = greenwich_date_to_julian_date(year, month, day)
-  a = (jd + 1.5) % 7
+def finding_day_of_week(julianDate: float) -> str:
+  a = (julianDate + 1.5) % 7
 
   if a < 1: return "Sunday"
   if a < 2: return "Monday"
@@ -147,4 +146,17 @@ def convert_universal_time_to_local_civil_time(ut_hours: int, ut_minutes: int, u
   
   return local_date + (lct)
 
+def convert_universal_time_to_greenwich_sidereal_time(greenWich_year: int, greenwich_month: int, greenwic_day: int, ut_hours: int, ut_minutes: int, ut_seconds: float) -> tuple:
+  julianDate = greenwich_date_to_julian_date(greenWich_year,greenwich_month,greenwic_day) 
+  s = julianDate - 2451545.0
+  t = s / 36525.0
+  t0 = 6.697374558+(2400.051336*t)+(0.000025862*t**2)
+  t1 = t0 - (24 * math.floor(t0 / 24))
+  ut = convert_hours_minute_seconds_to_decimal_time(ut_hours,ut_minutes,ut_seconds)
+  a = ut * 1.002737909
+  gst0 = a + t1
+  gst = gst0 - (24 * math.floor(gst0 / 24))
+
   
+
+  return convert_decimal_hours_to_hours_minutes_seconds(gst)

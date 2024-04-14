@@ -30,8 +30,8 @@ class TimeTestMethods(unittest.TestCase):
   def test_finding_day_of_week(self):
     msg = 'test_finding_day_of_week fail'
 
-    self.assertEqual(time_functions.finding_day_of_week(2009,6,19), "Friday", msg)
-    self.assertEqual(time_functions.finding_day_of_week(2024,4,7), "Sunday", msg)
+    self.assertEqual(time_functions.finding_day_of_week(2455001.5), "Friday", msg)
+    self.assertEqual(time_functions.finding_day_of_week(time_functions.greenwich_date_to_julian_date(2024,4,7)), "Sunday", msg)
 
   def test_convert_hours_minute_seconds_to_decimal_time(self):
     msg = 'test_convert_hours_minute_seconds_to_decimal_time fail'
@@ -52,6 +52,11 @@ class TimeTestMethods(unittest.TestCase):
     msg = 'test_convert_universal_time_to_local_civil_time fail'
 
     self.assertEqual(time_functions.convert_universal_time_to_local_civil_time(22,37,0,2013,6,30,4,1), (2013, 7, 1, 3, 37, 0), msg)
+
+  def test_convert_universal_time_to_greenwich_sidereal_time(self):
+    msg = 'test_convert_universal_time_to_greenwich_sidereal_time fail'
+
+    self.assertEqual(time_functions.convert_universal_time_to_greenwich_sidereal_time(1980,4,22,14,36,51.67), (4, 40, 5.23), msg)
 
 
 if __name__ == '__main__':
