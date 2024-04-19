@@ -146,8 +146,8 @@ def convert_universal_time_to_local_civil_time(ut_hours: int, ut_minutes: int, u
   
   return local_date + (lct)
 
-def convert_universal_time_to_greenwich_sidereal_time(greenWich_year: int, greenwich_month: int, greenwic_day: int, ut_hours: int, ut_minutes: int, ut_seconds: float) -> tuple:
-  julianDate = greenwich_date_to_julian_date(greenWich_year,greenwich_month,greenwic_day) 
+def convert_universal_time_to_greenwich_sidereal_time(greenWich_year: int, greenwich_month: int, greenwich_day: int, ut_hours: int, ut_minutes: int, ut_seconds: float) -> tuple:
+  julianDate = greenwich_date_to_julian_date(greenWich_year,greenwich_month,greenwich_day) 
   s = julianDate - 2451545.0
   t = s / 36525.0
   t0 = 6.697374558+(2400.051336*t)+(0.000025862*t**2)
