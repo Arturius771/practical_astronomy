@@ -58,6 +58,20 @@ class TimeTestMethods(unittest.TestCase):
 
     self.assertEqual(time_functions.convert_universal_time_to_greenwich_sidereal_time(1980,4,22,14,36,51.67), (4, 40, 5.23), msg)
 
+  def test_convert_greenwich_sidereal_time_to_universal_time(self):
+    msg = 'test_convert_greenwich_sidereal_time_to_universal_time fail'
+
+    self.assertEqual(time_functions.convert_greenwich_sidereal_time_to_universal_time(4,40,5.23,1980,4,22), (1980, 4, 22, 14, 36, 51.67), msg)
+
+  def test_convert_greenwich_sidereal_time_to_local_sidereal_time(self):
+    msg = 'test_convert_greenwich_sidereal_time_to_local_sidereal_time fail'
+
+    self.assertEqual(time_functions.convert_greenwich_sidereal_time_to_local_sidereal_time(4,40,5.23,-64), (0, 24, 5.23), msg)
+
+  def test_convert_local_sidereal_time_to_greenwich_sidereal_time(self):
+    msg = 'test_convert_local_sidereal_time_to_greenwich_sidereal_time fail'
+
+    self.assertEqual(time_functions.convert_local_sidereal_time_to_greenwich_sidereal_time(0,24,5.23,-64), (4, 40, 5.23), msg)
 
 if __name__ == '__main__':
     unittest.main()

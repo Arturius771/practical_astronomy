@@ -157,6 +157,36 @@ def convert_universal_time_to_greenwich_sidereal_time(greenWich_year: int, green
   gst0 = a + t1
   gst = gst0 - (24 * math.floor(gst0 / 24))
 
-  
-
   return convert_decimal_hours_to_hours_minutes_seconds(gst)
+
+def convert_greenwich_sidereal_time_to_universal_time(gst_hours: int, gst_minutes: int, gst_seconds: float, greenWich_year: int, greenwich_month: int, greenwich_day: int) -> tuple:
+  julianDate = greenwich_date_to_julian_date(greenWich_year,greenwich_month,greenwich_day) 
+  s = julianDate - 2451545.0
+  t = s / 36525.0
+  t0 = 6.697374558+(2400.051336*t)+(0.000025862*t**2)
+  t1 = t0 - (24 * math.floor(t0 / 24))
+  gst_decimal = convert_hours_minute_seconds_to_decimal_time(gst_hours,gst_minutes,gst_seconds)
+  a = gst_decimal - t1
+  b = a - (24 * math.floor(a / 24))
+  ut = b * 0.9972695663
+  utc = convert_decimal_hours_to_hours_minutes_seconds(ut)
+
+  return (greenWich_year, greenwich_month, greenwich_day) + utc
+
+def convert_greenwich_sidereal_time_to_local_sidereal_time(gst_hours: int, gst_minutes: int, gst_seconds: float, longitude: int) -> tuple:
+  gst_decimal = convert_hours_minute_seconds_to_decimal_time(gst_hours,gst_minutes,gst_seconds)
+  offset = longitude / 15
+  lst = gst_decimal + offset
+  lst1 = lst - (24 * math.floor(lst / 24))
+  non_decimal_lst = convert_decimal_hours_to_hours_minutes_seconds(lst1)
+
+  return non_decimal_lst
+
+def convert_local_sidereal_time_to_greenwich_sidereal_time(lst_hours: int, lst_minutes: int, lst_seconds: float, longitude: int) -> tuple:
+  lst_decimal = convert_hours_minute_seconds_to_decimal_time(lst_hours,lst_minutes,lst_seconds)
+  offset = longitude / 15
+  gst = lst_decimal - offset
+  gst1 = gst - (24 * math.floor(gst / 24))
+  non_decimal_lst = convert_decimal_hours_to_hours_minutes_seconds(gst1)
+
+  return non_decimal_lst
