@@ -1,4 +1,5 @@
 import math
+import helpers
 
 def date_of_easter(year: int) -> tuple:
   a = year % 19
@@ -104,23 +105,15 @@ def finding_day_of_week(julianDate: float) -> str:
   if a < 7: return "Saturday"
 
 def convert_hours_minute_seconds_to_decimal_time(hours: int, minutes: int, seconds: int, twenty_four_hour_clock = True) -> float:
-  a = seconds / 60
-  b = (a + minutes) / 60
-  c = b + hours
+  c = helpers.convert_hours_minute_seconds_to_decimal(hours, minutes, seconds)
 
   return c if twenty_four_hour_clock else c + 12
 
 def convert_decimal_hours_to_hours_minutes_seconds(decimalTime: float) -> tuple:
-  a = abs(decimalTime)
-  b = a * 3600
-  c = round((b % 60), 2)
-  seconds = 0 if c == 60 else c
-  e = b + 60 if c == 60 else b
-  minutes = math.floor((e) / 60) % 60
-  unsigned_hours = math.floor(e / 3600)
-  hours = unsigned_hours * -1 if decimalTime < 0 else unsigned_hours
+  hms = helpers.convert_decimal_to_hours_minutes_seconds(decimalTime)
+  hours = hms[0] * -1 if decimalTime < 0 else hms[0]
 
-  return (hours, minutes, seconds)
+  return (hours, hms[1], hms[2])
 
 def convert_local_civil_time_to_universal_time(local_year: int, local_month: int, local_day: int, local_hours: int, local_minutes: int, local_seconds: float, daylight_savings_correction = 0, timezone_offset_correction = 0) -> tuple:
 

@@ -24,5 +24,11 @@ class CoordinateTestMethods(unittest.TestCase):
 
     self.assertEqual(coordinate_functions.convert_hour_angle_to_right_ascension(9,52,23.66,14,36,51.67,0,-4,22,4,1980,-64), (18, 32, 21.0), msg)
 
+  def test_convert_equatorial_coordinates_to_horizon_coordinates(self):
+    msg = 'test_convert_equatorial_coordinates_to_horizon_coordinates fail'
+
+    self.assertEqual(coordinate_functions.convert_equatorial_coordinates_to_horizon_coordinates(5,51,44,23,13,10,52), (283,16,15.7,19,20,3.64), msg)
+
+
 if __name__ == '__main__':
     unittest.main()
