@@ -13,9 +13,9 @@ class TimeTestMethods(unittest.TestCase):
   def test_date_to_day_number(self):
     msg = 'test_date_to_day_number fail'
 
-    self.assertEqual(time_functions.date_to_day_number(1,1,True), 1, msg)
-    self.assertEqual(time_functions.date_to_day_number(12,31,True), 366, msg)
-    self.assertEqual(time_functions.date_to_day_number(12,31,False), 365, msg)
+    self.assertEqual(time_functions.date_to_day_number(1,1,2000), 1, msg)
+    self.assertEqual(time_functions.date_to_day_number(12,31,2000), 366, msg)
+    self.assertEqual(time_functions.date_to_day_number(12,31), 365, msg)
 
   def test_greenwich_date_to_julian_date(self):
     msg = 'test_greenwich_date_to_julian_date fail'
@@ -72,6 +72,18 @@ class TimeTestMethods(unittest.TestCase):
     msg = 'test_convert_local_sidereal_time_to_greenwich_sidereal_time fail'
 
     self.assertEqual(time_functions.convert_local_sidereal_time_to_greenwich_sidereal_time(0,24,5.23,-64), (4, 40, 5.23), msg)
+
+  def test_year_is_leap(self):
+    msg = 'test_year_is_leap fail'
+
+    self.assertEqual(time_functions.year_is_leap(1600), True, msg)
+    self.assertEqual(time_functions.year_is_leap(1900), False, msg)
+    self.assertEqual(time_functions.year_is_leap(1992), True, msg)
+    self.assertEqual(time_functions.year_is_leap(2000), True, msg)
+    self.assertEqual(time_functions.year_is_leap(2023), False, msg)
+    self.assertEqual(time_functions.year_is_leap(2024), True, msg)
+    self.assertEqual(time_functions.year_is_leap(2048), True, msg)
+
 
 if __name__ == '__main__':
     unittest.main()

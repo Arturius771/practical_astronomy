@@ -21,13 +21,11 @@ def date_of_easter(year: int) -> tuple:
 
   return (day, month, year)
 
-def date_to_day_number(month: int, day: int, leap_year = False) -> int:
-
+def date_to_day_number(month: int, day: int, year = 1900) -> int:
   if month > 2:
-
     j = math.floor((month + 1) * 30.6)
 
-    if (leap_year):
+    if (year_is_leap(year)):
       k = j - 62
     else:
       k = j - 63
@@ -35,13 +33,21 @@ def date_to_day_number(month: int, day: int, leap_year = False) -> int:
     return k + day
   
   else:
-    if (leap_year):
+    if (year_is_leap(year)):
       d = (month - 1) * 62
     else:
       d = (month - 1) * 63
     f = math.floor(d / 2)
 
     return f + day    
+  
+def year_is_leap(year: int) -> bool:
+  if(((year % 4 == 0) and (year % 100 == 0) and (year % 400 == 0)) or ((year % 4 == 0) and (year % 100 != 0))):
+    return True
+    
+  return False
+
+  
 
 def greenwich_date_to_julian_date(year: int, month: int, day: float | int) -> float:
   if month == 1 or month == 2:

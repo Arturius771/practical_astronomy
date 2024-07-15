@@ -16,8 +16,8 @@ def convert_hours_minute_seconds_to_decimal(hours: int, minutes: int, seconds: i
 
   return c
 
-def convert_decimal_to_hours_minutes_seconds(decimalTime: float) -> tuple:
-  a = abs(decimalTime)
+def convert_decimal_to_hours_minutes_seconds(decimalValue: float) -> tuple:
+  a = abs(decimalValue)
   b = a * 3600
   c = round((b % 60), 2)
   seconds = 0 if c == 60 else c
