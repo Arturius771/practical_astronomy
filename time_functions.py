@@ -47,8 +47,6 @@ def year_is_leap(year: int) -> bool:
     
   return False
 
-  
-
 def greenwich_date_to_julian_date(year: int, month: int, day: float | int) -> float:
   if month == 1 or month == 2:
     y = year -1
@@ -113,7 +111,7 @@ def finding_day_of_week(julianDate: float) -> str:
 def convert_hours_minute_seconds_to_decimal_time(hours: int, minutes: int, seconds: int, twenty_four_hour_clock = True) -> float:
   c = helpers.convert_hours_minute_seconds_to_decimal(hours, minutes, seconds)
 
-  return c if twenty_four_hour_clock else c + 12
+  return c if twenty_four_hour_clock or c <= 12 else c - 12
 
 def convert_decimal_hours_to_hours_minutes_seconds(decimalTime: float) -> tuple:
   hours, minutes, seconds = helpers.convert_decimal_to_hours_minutes_seconds(decimalTime)

@@ -44,7 +44,7 @@ def convert_hour_angle_to_right_ascension(hour_angle_hour: int, hour_angle_minut
 
   return convert_decimal_degrees_to_degrees_minutes_seconds(right_ascension)
 
-def convert_equatorial_coordinates_to_horizon_coordinates(hour_angle_hour: int, hour_angle_minutes: int, hour_angle_seconds: float, declination_degrees, declination_minutes, declination_seconds, latitude) -> tuple:
+def convert_equatorial_coordinates_to_horizon_coordinates(hour_angle_hour: int, hour_angle_minutes: int, hour_angle_seconds: float, declination_degrees: int, declination_minutes: int, declination_seconds: float, latitude: float) -> tuple:
   ha_in_decimal = helpers.convert_hours_minute_seconds_to_decimal(hour_angle_hour,hour_angle_minutes,hour_angle_seconds)
   ha_in_degrees = ha_in_decimal * 15
   ha_in_radians = math.radians(ha_in_degrees)

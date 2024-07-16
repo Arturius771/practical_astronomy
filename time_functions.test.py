@@ -37,6 +37,10 @@ class TimeTestMethods(unittest.TestCase):
     msg = 'test_convert_hours_minute_seconds_to_decimal_time fail'
 
     self.assertEqual(time_functions.convert_hours_minute_seconds_to_decimal_time(18,31,27), 18.524166666666666, msg)
+    self.assertEqual(time_functions.convert_hours_minute_seconds_to_decimal_time(18,31,27,False), 6.524166666666666, msg)
+    self.assertEqual(time_functions.convert_hours_minute_seconds_to_decimal_time(11,31,5,False), 11.518055555555556, msg)
+    self.assertEqual(time_functions.convert_hours_minute_seconds_to_decimal_time(12,00,00,False), 12, msg)
+    self.assertEqual(time_functions.convert_hours_minute_seconds_to_decimal_time(12,00,00), 12, msg)
 
   def test_convert_decimal_hours_to_hours_minutes_seconds(self):
     msg = 'test_convert_decimal_hours_to_hours_minutes_seconds fail'
