@@ -12,16 +12,10 @@ def convert_degrees_minutes_seconds_to_decimal_degrees(angle: int, minutes: int,
 
 
 def convert_decimal_degrees_to_degrees_minutes_seconds(decimal_degree: float) -> tuple:
-  unsigned_decimal = abs(decimal_degree)
-  total_seconds = unsigned_decimal * 3600
-  total_seconds_rounded = round(total_seconds % 60, 2)
-  corrected = 0 if total_seconds_rounded == 60 else total_seconds_rounded
-  corrected_remainder = total_seconds + 60 if total_seconds_rounded == 60 else total_seconds
-  minutes = math.floor(corrected_remainder / 60) % 60
-  unsigned_degrees = math.floor(corrected_remainder / 3600)
-  signed_degrees = -1 * unsigned_degrees if decimal_degree < 0 else unsigned_degrees
+    unsigned_degrees, minutes, seconds = helpers.convert_decimal_to_hours_minutes_seconds(decimal_degree)
+    signed_degrees = -1 * unsigned_degrees if decimal_degree < 0 else unsigned_degrees
   
-  return (signed_degrees, minutes, math.floor(corrected))
+    return (signed_degrees, minutes, seconds)
   
 def convert_right_ascension_to_hour_angle(right_ascension_hours: int, right_ascension_minutes: int, right_ascension_seconds: float, local_hours: int, local_minutes: int, local_seconds: float, daylight_savings: int, zone_correction: int, local_day: int, local_month: int, local_year: int, longitude: float) -> tuple:
   # H = LST - a
@@ -35,7 +29,7 @@ def convert_right_ascension_to_hour_angle(right_ascension_hours: int, right_asce
   if hour_angle < 0:
     hour_angle += 24
   
-  return helpers.convert_decimal_to_hours_minutes_seconds(hour_angle)
+  return convert_decimal_degrees_to_degrees_minutes_seconds(hour_angle)
 
 def convert_hour_angle_to_right_ascension(hour_angle_hour: int, hour_angle_minutes: int, hour_angle_seconds: float, local_hours: int, local_minutes: int, local_seconds: float, daylight_savings: int, zone_correction: int, local_day: int, local_month: int, local_year: int, longitude: float) -> tuple:
   greenwich_year, greenwich_month, greenwich_day, utc_hour, utc_minute, utc_second = time_functions.convert_local_civil_time_to_universal_time(local_year,local_month, local_day,local_hours,local_minutes,local_seconds,daylight_savings,zone_correction)
@@ -48,7 +42,7 @@ def convert_hour_angle_to_right_ascension(hour_angle_hour: int, hour_angle_minut
   if right_ascension < 0:
     right_ascension += 24
 
-  return helpers.convert_decimal_to_hours_minutes_seconds(right_ascension)
+  return convert_decimal_degrees_to_degrees_minutes_seconds(right_ascension)
 
 def convert_equatorial_coordinates_to_horizon_coordinates(hour_angle_hour: int, hour_angle_minutes: int, hour_angle_seconds: float, declination_degrees, declination_minutes, declination_seconds, latitude) -> tuple:
   ha_in_decimal = helpers.convert_hours_minute_seconds_to_decimal(hour_angle_hour,hour_angle_minutes,hour_angle_seconds)
@@ -68,9 +62,9 @@ def convert_equatorial_coordinates_to_horizon_coordinates(hour_angle_hour: int, 
   if b < 0:
     b += 360
 
-  azimuth = helpers.convert_decimal_to_hours_minutes_seconds(b)
-  altitude = helpers.convert_decimal_to_hours_minutes_seconds(a_degrees)
+  azimuth_degrees, azimuth_minutes, azimuth_seconds = convert_decimal_degrees_to_degrees_minutes_seconds(b)
+  altitude_degrees, altitude_minutes, altitude_seconds = convert_decimal_degrees_to_degrees_minutes_seconds(a_degrees)
 
-  return (azimuth[0], azimuth[1], azimuth[2], altitude[0], altitude[1], altitude[2])
+  return (azimuth_degrees, azimuth_minutes, azimuth_seconds, altitude_degrees, altitude_minutes, altitude_seconds)
 
 

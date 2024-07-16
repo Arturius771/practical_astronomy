@@ -116,10 +116,10 @@ def convert_hours_minute_seconds_to_decimal_time(hours: int, minutes: int, secon
   return c if twenty_four_hour_clock else c + 12
 
 def convert_decimal_hours_to_hours_minutes_seconds(decimalTime: float) -> tuple:
-  hms = helpers.convert_decimal_to_hours_minutes_seconds(decimalTime)
-  hours = hms[0] * -1 if decimalTime < 0 else hms[0]
+  hours, minutes, seconds = helpers.convert_decimal_to_hours_minutes_seconds(decimalTime)
+  hours = hours * -1 if decimalTime < 0 else hours
 
-  return (hours, hms[1], hms[2])
+  return (hours, minutes, seconds)
 
 def convert_local_civil_time_to_universal_time(local_year: int, local_month: int, local_day: int, local_hours: int, local_minutes: int, local_seconds: float, daylight_savings_correction = 0, timezone_offset_correction = 0) -> tuple:
 
