@@ -1,5 +1,5 @@
 import math
-import helpers
+import utils
 
 def date_of_easter(year: int) -> tuple:
   a = year % 19
@@ -109,12 +109,12 @@ def finding_day_of_week(julianDate: float) -> str:
   if a < 7: return "Saturday"
 
 def convert_hours_minute_seconds_to_decimal_time(hours: int, minutes: int, seconds: int, twenty_four_hour_clock = True) -> float:
-  c = helpers.convert_hours_minute_seconds_to_decimal(hours, minutes, seconds)
+  c = utils.convert_hours_minute_seconds_to_decimal(hours, minutes, seconds)
 
   return c if twenty_four_hour_clock or c <= 12 else c - 12
 
 def convert_decimal_hours_to_hours_minutes_seconds(decimalTime: float) -> tuple:
-  hours, minutes, seconds = helpers.convert_decimal_to_hours_minutes_seconds(decimalTime)
+  hours, minutes, seconds = utils.convert_decimal_to_hours_minutes_seconds(decimalTime)
   hours = hours * -1 if decimalTime < 0 else hours
 
   return (hours, minutes, seconds)
