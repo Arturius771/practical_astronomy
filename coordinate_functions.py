@@ -7,7 +7,6 @@ def convert_degrees_minutes_seconds_to_decimal_degrees(angle: int, minutes: int,
   b = (abs(minutes) + a) / 60
   c = abs(angle) + b
   decimal_degrees = -c if angle < 0 or minutes < 0 or seconds < 0 else c
-
   return decimal_degrees
 
 
@@ -60,11 +59,30 @@ def convert_equatorial_coordinates_to_horizon_coordinates(hour_angle_hour: int, 
   b = math.degrees(a)
 
   if b < 0:
-    b += 360
+    b += 360 # b - (360 * math.floor(b/360))
 
   azimuth_degrees, azimuth_minutes, azimuth_seconds = convert_decimal_degrees_to_degrees_minutes_seconds(b)
   altitude_degrees, altitude_minutes, altitude_seconds = convert_decimal_degrees_to_degrees_minutes_seconds(a_degrees)
 
   return (azimuth_degrees, azimuth_minutes, azimuth_seconds, altitude_degrees, altitude_minutes, altitude_seconds)
 
+def convert_horizon_coordinates_to_equatorial_coordinates(azimuth_degrees, azimuth_minutes, azimuth_seconds, altitude_degrees, altitude_minutes, altitude_seconds, latitude) -> tuple:
+  azimuth_in_decimal = convert_degrees_minutes_seconds_to_decimal_degrees(azimuth_degrees, azimuth_minutes, azimuth_seconds)
+  altitude_in_decimal = convert_degrees_minutes_seconds_to_decimal_degrees(altitude_degrees, altitude_minutes, altitude_seconds)
+  azimuth_radians = math.radians(azimuth_in_decimal)
+  altitude_radians = math.radians(altitude_in_decimal)
+  latitude_radians = math.radians(latitude)
+  declination_sin = math.sin(altitude_radians) * math.sin(latitude_radians) + math.cos(altitude_radians) * math.cos(latitude_radians) * math.cos(azimuth_radians)
+  declination_radians = math.asin(declination_sin)
+  declination_degrees = math.degrees(declination_radians)
+  y = -math.cos(altitude_radians) * math.cos(latitude_radians) * math.sin(azimuth_radians)
+  x = math.sin(altitude_radians) - math.sin(latitude_radians) * declination_sin
+  a = math.atan2(y, x)
+  b = math.degrees(a)
+  ha_in_degrees = b - (360 * math.floor(b/360))
+  ha_hms = ha_in_degrees / 15
 
+  ha_hours, ha_minutes, ha_seconds = convert_decimal_degrees_to_degrees_minutes_seconds(ha_hms)
+  declination_hours, declination_minutes, declination_seconds = convert_decimal_degrees_to_degrees_minutes_seconds(declination_degrees)
+
+  return (ha_hours, ha_minutes, ha_seconds, declination_hours, declination_minutes, declination_seconds)

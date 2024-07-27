@@ -29,6 +29,10 @@ class CoordinateTestMethods(unittest.TestCase):
 
     self.assertEqual(coordinate_functions.convert_equatorial_coordinates_to_horizon_coordinates(5,51,44,23,13,10,52), (283,16,15.7,19,20,3.64), msg)
 
+  def test_convert_horizon_coordinates_to_equatorial_coordinates(self):
+    msg = 'test_convert_horizon_coordinates_to_equatorial_coordinates fail'
+
+    self.assertEqual(coordinate_functions.convert_horizon_coordinates_to_equatorial_coordinates(283,16,15.76,19,20,3.64,52), (5,51,44.0,23,13,10.04), msg)
 
 if __name__ == '__main__':
     unittest.main()
