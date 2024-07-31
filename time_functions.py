@@ -67,13 +67,11 @@ def greenwich_date_to_julian_date(year: int, month: int, day: float | int) -> fl
     c = math.floor(365.25 * y)
 
   d = math.floor(30.6001 * (m + 1))
-
   jd = b + c + d + day + 1720994.5
 
   return jd
 
 def julian_date_to_greenwich_date(julianDate: float) -> tuple:
-  
   jd = julianDate + 0.5
   i = math.floor(jd)
   f = jd - i
@@ -90,9 +88,7 @@ def julian_date_to_greenwich_date(julianDate: float) -> tuple:
   g = math.floor((c - e) / 30.6001)
 
   day = c - e + f - math.floor(30.6001 * g)
-
   month = g - 1 if g < 13.5 else g - 13
-
   year = d - 4716 if month > 2.5 else d - 4715
 
   return (year, month, day)
