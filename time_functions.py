@@ -97,6 +97,9 @@ def julian_date_to_greenwich_date(julianDate: float) -> tuple:
 
   return (year, month, day)
 
+def julian_date_to_j2000(julianDate: float) -> float:
+  return julianDate - 2451545.0
+
 def finding_day_of_week(julianDate: float) -> str:
   a = (julianDate + 1.5) % 7
 
@@ -143,9 +146,9 @@ def universal_time_to_local_civil_time(ut_hours: int, ut_minutes: int, ut_second
   
   return local_date + (lct)
 
-def universal_time_to_greenwich_sidereal_time(greenWich_year: int, greenwich_month: int, greenwich_day: int, ut_hours: int, ut_minutes: int, ut_seconds: float) -> tuple:
-  julianDate = greenwich_date_to_julian_date(greenWich_year,greenwich_month,greenwich_day) 
-  s = julianDate - 2451545.0
+def universal_time_to_greenwich_sidereal_time(greenwich_year: int, greenwich_month: int, greenwich_day: int, ut_hours: int, ut_minutes: int, ut_seconds: float) -> tuple:
+  julianDate = greenwich_date_to_julian_date(greenwich_year,greenwich_month,greenwich_day) 
+  s = julian_date_to_j2000(julianDate)
   t = s / 36525.0
   t0 = 6.697374558+(2400.051336*t)+(0.000025862*t**2)
   t1 = t0 - (24 * math.floor(t0 / 24))
@@ -156,9 +159,9 @@ def universal_time_to_greenwich_sidereal_time(greenWich_year: int, greenwich_mon
 
   return decimal_hours_to_hours_minutes_seconds(gst)
 
-def greenwich_sidereal_time_to_universal_time(gst_hours: int, gst_minutes: int, gst_seconds: float, greenWich_year: int, greenwich_month: int, greenwich_day: int) -> tuple:
-  julianDate = greenwich_date_to_julian_date(greenWich_year,greenwich_month,greenwich_day) 
-  s = julianDate - 2451545.0
+def greenwich_sidereal_time_to_universal_time(gst_hours: int, gst_minutes: int, gst_seconds: float, greenwich_year: int, greenwich_month: int, greenwich_day: int) -> tuple:
+  julianDate = greenwich_date_to_julian_date(greenwich_year,greenwich_month,greenwich_day) 
+  s = julian_date_to_j2000(julianDate)
   t = s / 36525.0
   t0 = 6.697374558+(2400.051336*t)+(0.000025862*t**2)
   t1 = t0 - (24 * math.floor(t0 / 24))
@@ -168,7 +171,7 @@ def greenwich_sidereal_time_to_universal_time(gst_hours: int, gst_minutes: int, 
   ut = b * 0.9972695663
   utc = decimal_hours_to_hours_minutes_seconds(ut)
 
-  return (greenWich_year, greenwich_month, greenwich_day) + utc
+  return (greenwich_year, greenwich_month, greenwich_day) + utc
 
 def greenwich_sidereal_time_to_local_sidereal_time(gst_hours: int, gst_minutes: int, gst_seconds: float, longitude: int) -> tuple:
   gst_decimal = hours_minute_seconds_to_decimal_time(gst_hours,gst_minutes,gst_seconds)

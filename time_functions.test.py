@@ -21,6 +21,12 @@ class TimeTestMethods(unittest.TestCase):
     msg = 'test_greenwich_date_to_julian_date fail'
 
     self.assertEqual(time_functions.greenwich_date_to_julian_date(2009,6,19.75), 2455002.25, msg)
+    self.assertEqual(time_functions.greenwich_date_to_julian_date(1969,1,5), 2440226.5, msg)
+
+  def test_julian_date_to_j2000(self):
+    msg = 'test_julian_date_to_j2000'
+
+    self.assertEqual(time_functions.julian_date_to_j2000(2440227.54513888889), -11317.454861111008, msg)
 
   def test_julian_date_to_greenwich_date(self):
     msg = 'test_julian_date_to_greenwich_date fail'
