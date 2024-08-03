@@ -17,27 +17,27 @@ class TimeTestMethods(unittest.TestCase):
     self.assertEqual(time_functions.date_to_day_number(12,31,2000), 366, msg)
     self.assertEqual(time_functions.date_to_day_number(12,31), 365, msg)
 
-  def test_greenwich_date_to_julian_date(self):
-    msg = 'test_greenwich_date_to_julian_date fail'
+  def test_greenwich_to_julian_date(self):
+    msg = 'test_greenwich_to_julian_date fail'
 
-    self.assertEqual(time_functions.greenwich_date_to_julian_date(2009,6,19.75), 2455002.25, msg)
-    self.assertEqual(time_functions.greenwich_date_to_julian_date(1969,1,5), 2440226.5, msg)
+    self.assertEqual(time_functions.greenwich_to_julian_date(2009,6,19.75), 2455002.25, msg)
+    self.assertEqual(time_functions.greenwich_to_julian_date(1969,1,5), 2440226.5, msg)
 
   def test_julian_date_to_j2000(self):
     msg = 'test_julian_date_to_j2000'
 
     self.assertEqual(time_functions.julian_date_to_j2000(2440227.54513888889), -11317.454861111008, msg)
 
-  def test_julian_date_to_greenwich_date(self):
-    msg = 'test_julian_date_to_greenwich_date fail'
+  def test_julian_to_greenwich_date(self):
+    msg = 'test_julian_to_greenwich_date fail'
 
-    self.assertEqual(time_functions.julian_date_to_greenwich_date(2455002.25), (2009, 6, 19.75), msg)
+    self.assertEqual(time_functions.julian_to_greenwich_date(2455002.25), (2009, 6, 19.75), msg)
 
   def test_finding_day_of_week(self):
     msg = 'test_finding_day_of_week fail'
 
     self.assertEqual(time_functions.finding_day_of_week(2455001.5), "Friday", msg)
-    self.assertEqual(time_functions.finding_day_of_week(time_functions.greenwich_date_to_julian_date(2024,4,7)), "Sunday", msg)
+    self.assertEqual(time_functions.finding_day_of_week(time_functions.greenwich_to_julian_date(2024,4,7)), "Sunday", msg)
 
   def test_hours_minutes_seconds_to_decimal_time(self):
     msg = 'test_hours_minutes_seconds_to_decimal_time fail'
@@ -53,35 +53,35 @@ class TimeTestMethods(unittest.TestCase):
 
     self.assertEqual(time_functions.decimal_hours_to_hours_minutes_seconds(18.52416667), (18, 31, 27), msg)
 
-  def test_local_civil_time_to_universal_time(self):
-    msg = 'test_local_civil_time_to_universal_time fail'
+  def test_local_civil_to_universal_time(self):
+    msg = 'test_local_civil_to_universal_time fail'
 
-    self.assertEqual(time_functions.local_civil_time_to_universal_time(2013,7,1,3,37,5,1,4), (2013, 6, 30, 22, 37, 5.0), msg)
+    self.assertEqual(time_functions.local_civil_to_universal_time(2013,7,1,3,37,5,1,4), (2013, 6, 30, 22, 37, 5.0), msg)
 
-  def test_universal_time_to_local_civil_time(self):
-    msg = 'test_universal_time_to_local_civil_time fail'
+  def test_universal_to_local_civil_time(self):
+    msg = 'test_universal_to_local_civil_time fail'
 
-    self.assertEqual(time_functions.universal_time_to_local_civil_time(22,37,0,2013,6,30,4,1), (2013, 7, 1, 3, 37, 0), msg)
+    self.assertEqual(time_functions.universal_to_local_civil_time(22,37,0,2013,6,30,4,1), (2013, 7, 1, 3, 37, 0), msg)
 
-  def test_universal_time_to_greenwich_sidereal_time(self):
-    msg = 'test_universal_time_to_greenwich_sidereal_time fail'
+  def test_universal_to_greenwich_sidereal_time(self):
+    msg = 'test_universal_to_greenwich_sidereal_time fail'
 
-    self.assertEqual(time_functions.universal_time_to_greenwich_sidereal_time(1980,4,22,14,36,51.67), (4, 40, 5.23), msg)
+    self.assertEqual(time_functions.universal_to_greenwich_sidereal_time(1980,4,22,14,36,51.67), (4, 40, 5.23), msg)
 
-  def test_greenwich_sidereal_time_to_universal_time(self):
-    msg = 'test_greenwich_sidereal_time_to_universal_time fail'
+  def test_greenwich_sidereal_to_universal_time(self):
+    msg = 'test_greenwich_sidereal_to_universal_time fail'
 
-    self.assertEqual(time_functions.greenwich_sidereal_time_to_universal_time(4,40,5.23,1980,4,22), (1980, 4, 22, 14, 36, 51.67), msg)
+    self.assertEqual(time_functions.greenwich_sidereal_to_universal_time(4,40,5.23,1980,4,22), (1980, 4, 22, 14, 36, 51.67), msg)
 
-  def test_greenwich_sidereal_time_to_local_sidereal_time(self):
-    msg = 'test_greenwich_sidereal_time_to_local_sidereal_time fail'
+  def test_greenwich_sidereal_to_local_sidereal_time(self):
+    msg = 'test_greenwich_sidereal_to_local_sidereal_time fail'
 
-    self.assertEqual(time_functions.greenwich_sidereal_time_to_local_sidereal_time(4,40,5.23,-64), (0, 24, 5.23), msg)
+    self.assertEqual(time_functions.greenwich_sidereal_to_local_sidereal_time(4,40,5.23,-64), (0, 24, 5.23), msg)
 
-  def test_local_sidereal_time_to_greenwich_sidereal_time(self):
-    msg = 'test_local_sidereal_time_to_greenwich_sidereal_time fail'
+  def test_local_sidereal_to_greenwich_sidereal_time(self):
+    msg = 'test_local_sidereal_to_greenwich_sidereal_time fail'
 
-    self.assertEqual(time_functions.local_sidereal_time_to_greenwich_sidereal_time(0,24,5.23,-64), (4, 40, 5.23), msg)
+    self.assertEqual(time_functions.local_sidereal_to_greenwich_sidereal_time(0,24,5.23,-64), (4, 40, 5.23), msg)
 
   def test_year_is_leap(self):
     msg = 'test_year_is_leap fail'

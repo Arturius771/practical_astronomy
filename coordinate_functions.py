@@ -16,9 +16,9 @@ def decimal_degrees_to_degrees_minutes_seconds(decimal_degree: float) -> tuple:
   
 def right_ascension_to_hour_angle(right_ascension_hours: int, right_ascension_minutes: int, right_ascension_seconds: float, local_hours: int, local_minutes: int, local_seconds: float, daylight_savings: int, zone_correction: int, local_day: int, local_month: int, local_year: int, longitude: float) -> tuple:
   # H = LST - a
-  greenwich_year, greenwich_month, greenwich_day, utc_hour, utc_minute, utc_second = time_functions.local_civil_time_to_universal_time(local_year,local_month, local_day,local_hours,local_minutes,local_seconds,daylight_savings,zone_correction)
-  gst_hours, gst_minutes, gst_seconds = time_functions.universal_time_to_greenwich_sidereal_time(greenwich_year,greenwich_month,greenwich_day,utc_hour,utc_minute,utc_second)
-  lst_hours, lst_minutes, lst_seconds = time_functions.greenwich_sidereal_time_to_local_sidereal_time(gst_hours, gst_minutes, gst_seconds, longitude)
+  greenwich_year, greenwich_month, greenwich_day, utc_hour, utc_minute, utc_second = time_functions.local_civil_to_universal_time(local_year,local_month, local_day,local_hours,local_minutes,local_seconds,daylight_savings,zone_correction)
+  gst_hours, gst_minutes, gst_seconds = time_functions.universal_to_greenwich_sidereal_time(greenwich_year,greenwich_month,greenwich_day,utc_hour,utc_minute,utc_second)
+  lst_hours, lst_minutes, lst_seconds = time_functions.greenwich_sidereal_to_local_sidereal_time(gst_hours, gst_minutes, gst_seconds, longitude)
   lst = degrees_minutes_seconds_to_decimal_degrees(lst_hours, lst_minutes, lst_seconds)
   ra_decimal = degrees_minutes_seconds_to_decimal_degrees(right_ascension_hours,right_ascension_minutes,right_ascension_seconds)
   hour_angle = lst - ra_decimal
@@ -29,9 +29,9 @@ def right_ascension_to_hour_angle(right_ascension_hours: int, right_ascension_mi
   return decimal_degrees_to_degrees_minutes_seconds(hour_angle)
 
 def hour_angle_to_right_ascension(hour_angle_hour: int, hour_angle_minutes: int, hour_angle_seconds: float, local_hours: int, local_minutes: int, local_seconds: float, daylight_savings: int, zone_correction: int, local_day: int, local_month: int, local_year: int, longitude: float) -> tuple:
-  greenwich_year, greenwich_month, greenwich_day, utc_hour, utc_minute, utc_second = time_functions.local_civil_time_to_universal_time(local_year,local_month, local_day,local_hours,local_minutes,local_seconds,daylight_savings,zone_correction)
-  gst_hours, gst_minutes, gst_seconds = time_functions.universal_time_to_greenwich_sidereal_time(greenwich_year,greenwich_month,greenwich_day,utc_hour,utc_minute,utc_second)
-  lst_hours, lst_minutes, lst_seconds = time_functions.greenwich_sidereal_time_to_local_sidereal_time(gst_hours, gst_minutes, gst_seconds, longitude)
+  greenwich_year, greenwich_month, greenwich_day, utc_hour, utc_minute, utc_second = time_functions.local_civil_to_universal_time(local_year,local_month, local_day,local_hours,local_minutes,local_seconds,daylight_savings,zone_correction)
+  gst_hours, gst_minutes, gst_seconds = time_functions.universal_to_greenwich_sidereal_time(greenwich_year,greenwich_month,greenwich_day,utc_hour,utc_minute,utc_second)
+  lst_hours, lst_minutes, lst_seconds = time_functions.greenwich_sidereal_to_local_sidereal_time(gst_hours, gst_minutes, gst_seconds, longitude)
   lst = degrees_minutes_seconds_to_decimal_degrees(lst_hours, lst_minutes, lst_seconds)
   ha_decimal = degrees_minutes_seconds_to_decimal_degrees(hour_angle_hour,hour_angle_minutes,hour_angle_seconds)
   right_ascension = lst - ha_decimal
@@ -86,7 +86,7 @@ def horizon_to_equatorial_coordinates(azimuth_degrees: int, azimuth_minutes: int
   return (ha_hours, ha_minutes, ha_seconds, declination_hours, declination_minutes, declination_seconds)
 
 def mean_obliquity_ecliptic(greenwich_year: int, greenwich_month: int, greenwich_day: int) -> float:
-  julianDate = time_functions.greenwich_date_to_julian_date(greenwich_year, greenwich_month, greenwich_day)
+  julianDate = time_functions.greenwich_to_julian_date(greenwich_year, greenwich_month, greenwich_day)
   j2000 = time_functions.julian_date_to_j2000(julianDate)
   t = j2000 / 36525
   de = (t * (46.815 + t * (0.0006-(t * 0.00181)))) / 3600

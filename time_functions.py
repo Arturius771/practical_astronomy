@@ -47,7 +47,7 @@ def year_is_leap(year: int) -> bool:
     
   return False
 
-def greenwich_date_to_julian_date(year: int, month: int, day: float | int) -> float:
+def greenwich_to_julian_date(year: int, month: int, day: float | int) -> float:
   if month == 1 or month == 2:
     y = year -1
     m = month + 12
@@ -71,7 +71,7 @@ def greenwich_date_to_julian_date(year: int, month: int, day: float | int) -> fl
 
   return jd
 
-def julian_date_to_greenwich_date(julianDate: float) -> tuple:
+def julian_to_greenwich_date(julianDate: float) -> tuple:
   jd = julianDate + 0.5
   i = math.floor(jd)
   f = jd - i
@@ -118,32 +118,32 @@ def decimal_hours_to_hours_minutes_seconds(decimalTime: float) -> tuple:
 
   return (hours, minutes, seconds)
 
-def local_civil_time_to_universal_time(local_year: int, local_month: int, local_day: int, local_hours: int, local_minutes: int, local_seconds: float, daylight_savings_correction = 0, timezone_offset_correction = 0) -> tuple:
+def local_civil_to_universal_time(local_year: int, local_month: int, local_day: int, local_hours: int, local_minutes: int, local_seconds: float, daylight_savings_correction = 0, timezone_offset_correction = 0) -> tuple:
 
   zone_time = local_hours - daylight_savings_correction
   decimal_zone_time = hours_minutes_seconds_to_decimal_time(zone_time, local_minutes, local_seconds)
   ut = decimal_zone_time - timezone_offset_correction
   greenwich_calendar_day = local_day + (ut / 24)
-  jd = greenwich_date_to_julian_date(local_year, local_month, greenwich_calendar_day)
-  greenwich_year, greenwich_month, greenwich_day = julian_date_to_greenwich_date(jd)
+  jd = greenwich_to_julian_date(local_year, local_month, greenwich_calendar_day)
+  greenwich_year, greenwich_month, greenwich_day = julian_to_greenwich_date(jd)
   utc = decimal_hours_to_hours_minutes_seconds(24 * (greenwich_calendar_day - math.floor(greenwich_calendar_day)))
 
   return (greenwich_year, greenwich_month, math.floor(greenwich_day)) + utc
 
-def universal_time_to_local_civil_time(ut_hours: int, ut_minutes: int, ut_seconds: int, greenwich_year: int, greenwich_month: int, greenwich_day: int, timezone_offset_correction = 0, daylight_savings_correction = 0) -> tuple:
+def universal_to_local_civil_time(ut_hours: int, ut_minutes: int, ut_seconds: int, greenwich_year: int, greenwich_month: int, greenwich_day: int, timezone_offset_correction = 0, daylight_savings_correction = 0) -> tuple:
   decimalHours = hours_minutes_seconds_to_decimal_time(ut_hours, ut_minutes, ut_seconds)
   lct = decimalHours + timezone_offset_correction + daylight_savings_correction
-  jd = greenwich_date_to_julian_date(greenwich_year,greenwich_month,greenwich_day)
+  jd = greenwich_to_julian_date(greenwich_year,greenwich_month,greenwich_day)
   ljd = jd + (lct / 24)
-  local_civil_year, local_civil_month, local_civil_day = julian_date_to_greenwich_date(ljd)
+  local_civil_year, local_civil_month, local_civil_day = julian_to_greenwich_date(ljd)
   integer_day = math.floor(local_civil_day)
   local_date = (local_civil_year, local_civil_month, integer_day)
   lct = decimal_hours_to_hours_minutes_seconds((local_civil_day - integer_day) * 24)
   
   return local_date + (lct)
 
-def universal_time_to_greenwich_sidereal_time(greenwich_year: int, greenwich_month: int, greenwich_day: int, ut_hours: int, ut_minutes: int, ut_seconds: float) -> tuple:
-  julianDate = greenwich_date_to_julian_date(greenwich_year,greenwich_month,greenwich_day) 
+def universal_to_greenwich_sidereal_time(greenwich_year: int, greenwich_month: int, greenwich_day: int, ut_hours: int, ut_minutes: int, ut_seconds: float) -> tuple:
+  julianDate = greenwich_to_julian_date(greenwich_year,greenwich_month,greenwich_day) 
   s = julian_date_to_j2000(julianDate)
   t = s / 36525.0
   t0 = 6.697374558+(2400.051336*t)+(0.000025862*t**2)
@@ -155,8 +155,8 @@ def universal_time_to_greenwich_sidereal_time(greenwich_year: int, greenwich_mon
 
   return decimal_hours_to_hours_minutes_seconds(gst)
 
-def greenwich_sidereal_time_to_universal_time(gst_hours: int, gst_minutes: int, gst_seconds: float, greenwich_year: int, greenwich_month: int, greenwich_day: int) -> tuple:
-  julianDate = greenwich_date_to_julian_date(greenwich_year,greenwich_month,greenwich_day) 
+def greenwich_sidereal_to_universal_time(gst_hours: int, gst_minutes: int, gst_seconds: float, greenwich_year: int, greenwich_month: int, greenwich_day: int) -> tuple:
+  julianDate = greenwich_to_julian_date(greenwich_year,greenwich_month,greenwich_day) 
   s = julian_date_to_j2000(julianDate)
   t = s / 36525.0
   t0 = 6.697374558+(2400.051336*t)+(0.000025862*t**2)
@@ -169,7 +169,7 @@ def greenwich_sidereal_time_to_universal_time(gst_hours: int, gst_minutes: int, 
 
   return (greenwich_year, greenwich_month, greenwich_day) + utc
 
-def greenwich_sidereal_time_to_local_sidereal_time(gst_hours: int, gst_minutes: int, gst_seconds: float, longitude: int) -> tuple:
+def greenwich_sidereal_to_local_sidereal_time(gst_hours: int, gst_minutes: int, gst_seconds: float, longitude: int) -> tuple:
   gst_decimal = hours_minutes_seconds_to_decimal_time(gst_hours,gst_minutes,gst_seconds)
   offset = longitude / 15
   lst = gst_decimal + offset
@@ -178,7 +178,7 @@ def greenwich_sidereal_time_to_local_sidereal_time(gst_hours: int, gst_minutes: 
 
   return non_decimal_lst
 
-def local_sidereal_time_to_greenwich_sidereal_time(lst_hours: int, lst_minutes: int, lst_seconds: float, longitude: int) -> tuple:
+def local_sidereal_to_greenwich_sidereal_time(lst_hours: int, lst_minutes: int, lst_seconds: float, longitude: int) -> tuple:
   lst_decimal = hours_minutes_seconds_to_decimal_time(lst_hours,lst_minutes,lst_seconds)
   offset = longitude / 15
   gst = lst_decimal - offset
