@@ -9,12 +9,12 @@ import math
 #     return radians * (180 / math.pi) or math.degrees(radians)
 
 
-def hours_minute_seconds_to_decimal(hours: int, minutes: int, seconds: int) -> float:
+def hours_minutes_seconds_to_decimal(hours: int, minutes: int, seconds: int) -> float:
   a = seconds / 60
   b = (a + minutes) / 60
-  c = b + hours
+  unsigned_decimal = b + hours
 
-  return c
+  return unsigned_decimal
 
 def decimal_to_hours_minutes_seconds(decimal_value: float) -> tuple:
   unsigned_decimal = abs(decimal_value)

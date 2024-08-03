@@ -39,14 +39,14 @@ class TimeTestMethods(unittest.TestCase):
     self.assertEqual(time_functions.finding_day_of_week(2455001.5), "Friday", msg)
     self.assertEqual(time_functions.finding_day_of_week(time_functions.greenwich_date_to_julian_date(2024,4,7)), "Sunday", msg)
 
-  def test_hours_minute_seconds_to_decimal_time(self):
-    msg = 'test_hours_minute_seconds_to_decimal_time fail'
+  def test_hours_minutes_seconds_to_decimal_time(self):
+    msg = 'test_hours_minutes_seconds_to_decimal_time fail'
 
-    self.assertEqual(time_functions.hours_minute_seconds_to_decimal_time(18,31,27), 18.524166666666666, msg)
-    self.assertEqual(time_functions.hours_minute_seconds_to_decimal_time(18,31,27,False), 6.524166666666666, msg)
-    self.assertEqual(time_functions.hours_minute_seconds_to_decimal_time(11,31,5,False), 11.518055555555556, msg)
-    self.assertEqual(time_functions.hours_minute_seconds_to_decimal_time(12,00,00,False), 12, msg)
-    self.assertEqual(time_functions.hours_minute_seconds_to_decimal_time(12,00,00), 12, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(18,31,27), 18.524166666666666, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(18,31,27,False), 6.524166666666666, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(11,31,5,False), 11.518055555555556, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(12,00,00,False), 12, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(12,00,00), 12, msg)
 
   def test_decimal_hours_to_hours_minutes_seconds(self):
     msg = 'test_decimal_hours_to_hours_minutes_seconds fail'

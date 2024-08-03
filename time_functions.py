@@ -107,8 +107,8 @@ def finding_day_of_week(julianDate: float) -> str:
   if a < 6: return "Friday"
   if a < 7: return "Saturday"
 
-def hours_minute_seconds_to_decimal_time(hours: int, minutes: int, seconds: int, twenty_four_hour_clock = True) -> float:
-  c = utils.hours_minute_seconds_to_decimal(hours, minutes, seconds)
+def hours_minutes_seconds_to_decimal_time(hours: int, minutes: int, seconds: int, twenty_four_hour_clock = True) -> float:
+  c = utils.hours_minutes_seconds_to_decimal(hours, minutes, seconds)
 
   return c if twenty_four_hour_clock or c <= 12 else c - 12
 
@@ -121,7 +121,7 @@ def decimal_hours_to_hours_minutes_seconds(decimalTime: float) -> tuple:
 def local_civil_time_to_universal_time(local_year: int, local_month: int, local_day: int, local_hours: int, local_minutes: int, local_seconds: float, daylight_savings_correction = 0, timezone_offset_correction = 0) -> tuple:
 
   zone_time = local_hours - daylight_savings_correction
-  decimal_zone_time = hours_minute_seconds_to_decimal_time(zone_time, local_minutes, local_seconds)
+  decimal_zone_time = hours_minutes_seconds_to_decimal_time(zone_time, local_minutes, local_seconds)
   ut = decimal_zone_time - timezone_offset_correction
   greenwich_calendar_day = local_day + (ut / 24)
   jd = greenwich_date_to_julian_date(local_year, local_month, greenwich_calendar_day)
@@ -131,7 +131,7 @@ def local_civil_time_to_universal_time(local_year: int, local_month: int, local_
   return (greenwich_year, greenwich_month, math.floor(greenwich_day)) + utc
 
 def universal_time_to_local_civil_time(ut_hours: int, ut_minutes: int, ut_seconds: int, greenwich_year: int, greenwich_month: int, greenwich_day: int, timezone_offset_correction = 0, daylight_savings_correction = 0) -> tuple:
-  decimalHours = hours_minute_seconds_to_decimal_time(ut_hours, ut_minutes, ut_seconds)
+  decimalHours = hours_minutes_seconds_to_decimal_time(ut_hours, ut_minutes, ut_seconds)
   lct = decimalHours + timezone_offset_correction + daylight_savings_correction
   jd = greenwich_date_to_julian_date(greenwich_year,greenwich_month,greenwich_day)
   ljd = jd + (lct / 24)
@@ -148,7 +148,7 @@ def universal_time_to_greenwich_sidereal_time(greenwich_year: int, greenwich_mon
   t = s / 36525.0
   t0 = 6.697374558+(2400.051336*t)+(0.000025862*t**2)
   t1 = t0 - (24 * math.floor(t0 / 24))
-  ut = hours_minute_seconds_to_decimal_time(ut_hours,ut_minutes,ut_seconds)
+  ut = hours_minutes_seconds_to_decimal_time(ut_hours,ut_minutes,ut_seconds)
   a = ut * 1.002737909
   gst0 = a + t1
   gst = gst0 - (24 * math.floor(gst0 / 24))
@@ -161,7 +161,7 @@ def greenwich_sidereal_time_to_universal_time(gst_hours: int, gst_minutes: int, 
   t = s / 36525.0
   t0 = 6.697374558+(2400.051336*t)+(0.000025862*t**2)
   t1 = t0 - (24 * math.floor(t0 / 24))
-  gst_decimal = hours_minute_seconds_to_decimal_time(gst_hours,gst_minutes,gst_seconds)
+  gst_decimal = hours_minutes_seconds_to_decimal_time(gst_hours,gst_minutes,gst_seconds)
   a = gst_decimal - t1
   b = a - (24 * math.floor(a / 24))
   ut = b * 0.9972695663
@@ -170,7 +170,7 @@ def greenwich_sidereal_time_to_universal_time(gst_hours: int, gst_minutes: int, 
   return (greenwich_year, greenwich_month, greenwich_day) + utc
 
 def greenwich_sidereal_time_to_local_sidereal_time(gst_hours: int, gst_minutes: int, gst_seconds: float, longitude: int) -> tuple:
-  gst_decimal = hours_minute_seconds_to_decimal_time(gst_hours,gst_minutes,gst_seconds)
+  gst_decimal = hours_minutes_seconds_to_decimal_time(gst_hours,gst_minutes,gst_seconds)
   offset = longitude / 15
   lst = gst_decimal + offset
   lst1 = lst - (24 * math.floor(lst / 24))
@@ -179,7 +179,7 @@ def greenwich_sidereal_time_to_local_sidereal_time(gst_hours: int, gst_minutes: 
   return non_decimal_lst
 
 def local_sidereal_time_to_greenwich_sidereal_time(lst_hours: int, lst_minutes: int, lst_seconds: float, longitude: int) -> tuple:
-  lst_decimal = hours_minute_seconds_to_decimal_time(lst_hours,lst_minutes,lst_seconds)
+  lst_decimal = hours_minutes_seconds_to_decimal_time(lst_hours,lst_minutes,lst_seconds)
   offset = longitude / 15
   gst = lst_decimal - offset
   gst1 = gst - (24 * math.floor(gst / 24))
