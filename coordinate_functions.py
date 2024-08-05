@@ -32,9 +32,9 @@ def hour_angle_to_right_ascension(hour_angle_hour: int, hour_angle_minutes: int,
   greenwich_year, greenwich_month, greenwich_day, utc_hour, utc_minute, utc_second = time_functions.local_civil_to_universal_time(local_year,local_month, local_day,local_hours,local_minutes,local_seconds,daylight_savings,zone_correction)
   gst_hours, gst_minutes, gst_seconds = time_functions.universal_to_greenwich_sidereal_time(greenwich_year,greenwich_month,greenwich_day,utc_hour,utc_minute,utc_second)
   lst_hours, lst_minutes, lst_seconds = time_functions.greenwich_sidereal_to_local_sidereal_time(gst_hours, gst_minutes, gst_seconds, longitude)
-  lst = degrees_minutes_seconds_to_decimal_degrees(lst_hours, lst_minutes, lst_seconds)
+  local_siderial_time = degrees_minutes_seconds_to_decimal_degrees(lst_hours, lst_minutes, lst_seconds)
   ha_decimal = degrees_minutes_seconds_to_decimal_degrees(hour_angle_hour,hour_angle_minutes,hour_angle_seconds)
-  right_ascension = lst - ha_decimal
+  right_ascension = local_siderial_time - ha_decimal
 
   if right_ascension < 0:
     right_ascension += 24
@@ -49,18 +49,18 @@ def equatorial_to_horizon_coordinates(hour_angle_hour: int, hour_angle_minutes: 
   declination_radians = math.radians(declination_decimal)
   lat_radians = math.radians(latitude)
   sin_a = math.sin(declination_radians) * math.sin(lat_radians) + math.cos(declination_radians) * math.cos(lat_radians) * math.cos(ha_radians)
-  a_radians = math.asin(sin_a)
-  a_degrees = math.degrees(a_radians)
+  altitude_radians = math.asin(sin_a)
+  altitude_degrees = math.degrees(altitude_radians)
   y = -math.cos(declination_radians) * math.cos(lat_radians) * math.sin(ha_radians)
   x = math.sin(declination_radians) - math.sin(lat_radians) * sin_a
-  a = math.atan2(y, x) # Python takes y as first argument
-  b = math.degrees(a)
+  azimuth_radians = math.atan2(y, x) # Python takes y as first argument
+  azimuth_degrees = math.degrees(azimuth_radians)
 
-  if b < 0:
-    b += 360 # b - (360 * math.floor(b/360))
+  if azimuth_degrees < 0:
+    azimuth_degrees += 360 # b - (360 * math.floor(b/360))
 
-  azimuth_degrees, azimuth_minutes, azimuth_seconds = decimal_degrees_to_degrees_minutes_seconds(b)
-  altitude_degrees, altitude_minutes, altitude_seconds = decimal_degrees_to_degrees_minutes_seconds(a_degrees)
+  azimuth_degrees, azimuth_minutes, azimuth_seconds = decimal_degrees_to_degrees_minutes_seconds(azimuth_degrees)
+  altitude_degrees, altitude_minutes, altitude_seconds = decimal_degrees_to_degrees_minutes_seconds(altitude_degrees)
 
   return (azimuth_degrees, azimuth_minutes, azimuth_seconds, altitude_degrees, altitude_minutes, altitude_seconds)
 
