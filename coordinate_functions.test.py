@@ -7,12 +7,12 @@ class CoordinateTestMethods(unittest.TestCase):
   def test_decimal_degrees_to_degrees_minutes_seconds(self):
     msg = 'test_decimal_degrees_to_degrees_minutes_seconds fail'
 
-    self.assertEqual(coordinate_functions.decimal_degrees_to_degrees_minutes_seconds(182.52416666666667), (182,31,27), msg)
+    self.assertEqual(coordinate_functions.decimal_degrees_to_degrees(182.52416666666667), (182,31,27), msg)
 
   def test_degrees_minutes_seconds_to_decimal_degrees(self):
     msg = 'test_decimal_degrees_to_degrees_minutes_seconds fail'
 
-    self.assertEqual(coordinate_functions.degrees_minutes_seconds_to_decimal_degrees(182,31,27), (182.52416666666667), msg)
+    self.assertEqual(coordinate_functions.degrees_to_decimal_degrees(182,31,27), (182.52416666666667), msg)
 
   def test_right_ascension_to_hour_angle(self):
     msg = 'test_right_ascension_to_hour_angle fail'
