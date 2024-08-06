@@ -1,5 +1,5 @@
 import unittest
-from astronomy_types import Date, Degrees, EclipticCoordinates, EquatorialCoordinates, FullDate, HorizontalCoordinates, Time
+from astronomy_types import *
 import coordinate_functions
 
 

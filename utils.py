@@ -1,8 +1,7 @@
 # This should eventually be added to afmaths and reimported
 
 import math
-
-from time_functions import DecimalTime, Time
+from astronomy_types import *
 
 # def degrees_to_radians(degrees):
 #     return degrees * (math.pi / 180) or math.radians(degrees)

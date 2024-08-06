@@ -1,5 +1,5 @@
 import math
-from astronomy_types import Date, DecimalDegrees, Degrees, EclipticCoordinates, EquatorialCoordinates, FullDate, HorizontalCoordinates, HourAngle, Latitude, Longitude, Obliquity, RightAscension, Time
+from astronomy_types import *
 import time_functions
 import utils
 

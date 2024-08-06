@@ -1,5 +1,5 @@
 import math
-from astronomy_types import Date, DecimalTime, Epoch, FullDate, JulianDate, Longitude, Time, Year
+from astronomy_types import *
 import utils
 
 def date_of_easter(year: Year) -> Date:

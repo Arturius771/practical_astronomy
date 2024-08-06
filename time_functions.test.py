@@ -1,5 +1,5 @@
 import unittest
-from astronomy_types import Date, FullDate, Time
+from astronomy_types import *
 import time_functions
 
 class TimeTestMethods(unittest.TestCase):
