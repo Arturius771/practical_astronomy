@@ -20,18 +20,16 @@ class CoordinateTestMethods(unittest.TestCase):
   def test_right_ascension_to_hour_angle(self):
     msg = 'test_right_ascension_to_hour_angle fail'
 
-    ra = Degrees((18,32,21))
     full_date = FullDate((Date((1980,4,22)),Time((14,36,51.67))))
 
-    self.assertEqual(coordinate_functions.right_ascension_to_hour_angle(ra,full_date,0,-4,-64), (9, 52, 23.66), msg)
+    self.assertEqual(coordinate_functions.right_ascension_to_hour_angle(Degrees((18,32,21)),full_date,0,-4,-64), (9, 52, 23.66), msg)
 
   def test_hour_angle_to_right_ascension(self):
     msg = 'test_hour_angle_to_right_ascension fail'
 
-    ha = Degrees((9,52,23.66))
     full_date = FullDate((Date((1980,4,22,)),Time((14,36,51.67))))
 
-    self.assertEqual(coordinate_functions.hour_angle_to_right_ascension(ha,full_date,0,-4,-64), (18, 32, 21.0), msg)
+    self.assertEqual(coordinate_functions.hour_angle_to_right_ascension(Degrees((9,52,23.66)),full_date,0,-4,-64), (18, 32, 21.0), msg)
 
   def test_equatorial_to_horizon_coordinates(self):
     msg = 'test_equatorial_to_horizon_coordinates fail'
@@ -63,10 +61,9 @@ class CoordinateTestMethods(unittest.TestCase):
   def test_equatorial_to_ecliptic_coordinates(self):
     msg = 'test_equatorial_to_ecliptic_coordinates fail'
 
-    date = Date((2009,7,6))
     coordinates = EquatorialCoordinates((Degrees((9,34,53.4)), Degrees((19,32,8.52))))
 
-    self.assertEqual(coordinate_functions.equatorial_to_ecliptic_coordinates(coordinates,date), ((139,41,10.25),(4,52,30.99)), msg)
+    self.assertEqual(coordinate_functions.equatorial_to_ecliptic_coordinates(coordinates,Date((2009,7,6))), ((139,41,10.25),(4,52,30.99)), msg)
 
 if __name__ == '__main__':
     unittest.main()

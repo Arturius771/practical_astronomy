@@ -14,22 +14,15 @@ class TimeTestMethods(unittest.TestCase):
   def test_date_to_day_number(self):
     msg = 'test_date_to_day_number fail'
 
-    date1 = Date((2000,1,1))
-    date2 = Date((2000,12,31))
-    date3 = Date((1900,12,31))
-
-    self.assertEqual(time_functions.date_to_day_number(date1), 1, msg)
-    self.assertEqual(time_functions.date_to_day_number(date2), 366, msg)
-    self.assertEqual(time_functions.date_to_day_number(date3), 365, msg)
+    self.assertEqual(time_functions.date_to_day_number(Date((2000,1,1))), 1, msg)
+    self.assertEqual(time_functions.date_to_day_number(Date((2000,12,31))), 366, msg)
+    self.assertEqual(time_functions.date_to_day_number(Date((1900,12,31))), 365, msg)
 
   def test_greenwich_to_julian_date(self):
     msg = 'test_greenwich_to_julian_date fail'
 
-    date1 = Date((2009,6,19.75))
-    date2 = Date((1969,1,5))
-
-    self.assertEqual(time_functions.greenwich_to_julian_date(date1), 2455002.25, msg)
-    self.assertEqual(time_functions.greenwich_to_julian_date(date2), 2440226.5, msg)
+    self.assertEqual(time_functions.greenwich_to_julian_date(Date((2009,6,19.75))), 2455002.25, msg)
+    self.assertEqual(time_functions.greenwich_to_julian_date(Date((1969,1,5))), 2440226.5, msg)
 
   def test_julian_date_to_j2000(self):
     msg = 'test_julian_date_to_j2000'
@@ -45,25 +38,17 @@ class TimeTestMethods(unittest.TestCase):
   def test_finding_day_of_week(self):
     msg = 'test_finding_day_of_week fail'
 
-    date1 = time_functions.Date((2024,4,7))
-
     self.assertEqual(time_functions.finding_day_of_week(2455001.5), "Friday", msg)
-    self.assertEqual(time_functions.finding_day_of_week(time_functions.greenwich_to_julian_date(date1)), "Sunday", msg)
+    self.assertEqual(time_functions.finding_day_of_week(time_functions.greenwich_to_julian_date(Date((2024,4,7)))), "Sunday", msg)
 
   def test_hours_minutes_seconds_to_decimal_time(self):
     msg = 'test_hours_minutes_seconds_to_decimal_time fail'
 
-    time1 = time_functions.Time((18,31,27))
-    time2 = time_functions.Time((18,31,27))
-    time3 = time_functions.Time((11,31,5))
-    time4 = time_functions.Time((12,00,00))
-    time5 = time_functions.Time((12,00,00))
-
-    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(time1), 18.524166666666666, msg)
-    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(time2,False), 6.524166666666666, msg)
-    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(time3,False), 11.518055555555556, msg)
-    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(time4,False), 12, msg)
-    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(time5), 12, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(Time((18,31,27))), 18.524166666666666, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(Time((18,31,27)),False), 6.524166666666666, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(Time((11,31,5)),False), 11.518055555555556, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(Time((12,00,00)),False), 12, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(Time((12,00,00))), 12, msg)
 
   def test_decimal_hours_to_hours_minutes_seconds(self):
     msg = 'test_decimal_hours_to_hours_minutes_seconds fail'
@@ -72,12 +57,10 @@ class TimeTestMethods(unittest.TestCase):
 
   def test_local_civil_to_universal_time(self):
     msg = 'test_local_civil_to_universal_time fail'
-    
-    date = Date((2013,7,1))
-    time = Time((3,37,5))
-    full_date = FullDate((date,time))
 
-    self.assertEqual(time_functions.local_civil_to_universal_time(full_date,1,4), ((2013,6,30),(22,37,5.0)), msg)
+    lct = FullDate((Date((2013,7,1)),Time((3,37,5))))
+
+    self.assertEqual(time_functions.local_civil_to_universal_time(lct,1,4), ((2013,6,30),(22,37,5.0)), msg)
 
   def test_universal_to_local_civil_time(self):
     msg = 'test_universal_to_local_civil_time fail'
@@ -89,11 +72,9 @@ class TimeTestMethods(unittest.TestCase):
   def test_universal_to_greenwich_sidereal_time(self):
     msg = 'test_universal_to_greenwich_sidereal_time fail'
 
-    date = Date((1980,4,22))
-    time = Time((14,36,51.67))
-    full_date = FullDate((date,time))
+    utc = FullDate((Date((1980,4,22)),Time((14,36,51.67))))
 
-    self.assertEqual(time_functions.universal_to_greenwich_sidereal_time(full_date), (4, 40, 5.23), msg)
+    self.assertEqual(time_functions.universal_to_greenwich_sidereal_time(utc), (4, 40, 5.23), msg)
 
   def test_greenwich_sidereal_to_universal_time(self):
     msg = 'test_greenwich_sidereal_to_universal_time fail'
@@ -105,16 +86,12 @@ class TimeTestMethods(unittest.TestCase):
   def test_greenwich_sidereal_to_local_sidereal_time(self):
     msg = 'test_greenwich_sidereal_to_local_sidereal_time fail'
 
-    time = Time((4,40,5.23))
-
-    self.assertEqual(time_functions.greenwich_sidereal_to_local_sidereal_time(time,-64), (0, 24, 5.23), msg)
+    self.assertEqual(time_functions.greenwich_sidereal_to_local_sidereal_time(Time((4,40,5.23)),-64), (0, 24, 5.23), msg)
 
   def test_local_sidereal_to_greenwich_sidereal_time(self):
     msg = 'test_local_sidereal_to_greenwich_sidereal_time fail'
-
-    time = Time((0,24,5.23))
-
-    self.assertEqual(time_functions.local_sidereal_to_greenwich_sidereal_time(time,-64), (4, 40, 5.23), msg)
+    
+    self.assertEqual(time_functions.local_sidereal_to_greenwich_sidereal_time(Time((0,24,5.23)),-64), (4, 40, 5.23), msg)
 
   def test_year_is_leap(self):
     msg = 'test_year_is_leap fail'
