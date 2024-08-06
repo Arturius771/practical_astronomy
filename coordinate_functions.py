@@ -10,7 +10,7 @@ def degrees_to_decimal_degrees(degrees: Degrees | RightAscension) -> DecimalDegr
   return decimal_degrees
 
 
-def decimal_degrees_to_degrees(decimal_degree: float) -> Degrees:
+def decimal_degrees_to_degrees(decimal_degree: DecimalDegrees) -> Degrees:
     unsigned_degrees, minutes, seconds = utils.decimal_to_hours_minutes_seconds(decimal_degree)
     signed_degrees = -1 * unsigned_degrees if decimal_degree < 0 else unsigned_degrees
   
