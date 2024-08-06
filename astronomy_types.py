@@ -1,0 +1,29 @@
+from typing import NewType, Tuple, Union
+
+type Year = int
+type Month = int
+type Day = Union[int, float]
+type Hours = int
+type Minutes = int
+type Seconds = float
+type JulianDate = float
+Date = NewType('Date', Tuple[Year, Month, Day])
+Time = NewType('Time', Tuple[Hours, Minutes, Seconds])
+FullDate = NewType('FullDate', Tuple[Date, Time])
+type DecimalTime = float
+type Epoch = float
+type Angle = int
+Degrees = NewType('Degrees', Tuple[Angle, Minutes, Seconds])
+type RightAscension = Union[Time, Degrees]
+type DecimalDegrees = float
+type Declination = Degrees
+type HourAngle = Degrees
+type Longitude = Union[Degrees, DecimalDegrees]
+type Latitude =  Union[Degrees, DecimalDegrees]
+type Azimuth = Degrees
+type Altitude = Degrees
+GeographicCoordinates = NewType('GeographicCoordinates', Tuple[Latitude, Longitude])
+HorizontalCoordinates = NewType('HorizontalCoordinates', Tuple[Altitude, Azimuth])
+EquatorialCoordinates = NewType('EquatorialCoordinates', Tuple[HourAngle | RightAscension, Declination])
+EclipticCoordinates = NewType('EclipticCoordinates', Tuple[Latitude, Longitude])
+type Obliquity = DecimalDegrees
