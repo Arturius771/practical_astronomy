@@ -19,7 +19,7 @@ def hours_minutes_seconds_to_decimal(time: Time) -> DecimalTime:
 
   return unsigned_decimal
 
-def decimal_to_hours_minutes_seconds(decimal_value: float) -> Time:
+def decimal_to_hours_minutes_seconds(decimal_value: DecimalTime) -> Time:
   unsigned_decimal = abs(decimal_value)
   total_seconds = unsigned_decimal * 3600
   total_seconds_rounded = round((total_seconds % 60), 2)

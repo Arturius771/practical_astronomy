@@ -1,9 +1,9 @@
 import math
-from astronomy_types import Date, DecimalDegrees, Declination, Degrees, EclipticCoordinates, EquatorialCoordinates, FullDate, HorizontalCoordinates, HourAngle, Latitude, Longitude, Obliquity, RightAscension, Time
+from astronomy_types import Date, DecimalDegrees, Degrees, EclipticCoordinates, EquatorialCoordinates, FullDate, HorizontalCoordinates, HourAngle, Latitude, Longitude, Obliquity, RightAscension, Time
 import time_functions
 import utils
 
-def degrees_to_decimal_degrees(degrees: Degrees | Time) -> DecimalDegrees:
+def degrees_to_decimal_degrees(degrees: Degrees | RightAscension) -> DecimalDegrees:
   angle, minutes, seconds = degrees
   unsigned_degrees = utils.hours_minutes_seconds_to_decimal(Time((abs(angle), abs(minutes), abs(seconds))))
   decimal_degrees = -unsigned_degrees if angle < 0 or minutes < 0 or seconds < 0 else unsigned_degrees 
