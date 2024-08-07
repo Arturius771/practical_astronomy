@@ -29,7 +29,7 @@ def right_ascension_to_hour_angle(right_ascension: RightAscension, local_date_an
   if hour_angle < 0:
     hour_angle += 24
   
-  return decimal_degrees_to_degrees(hour_angle)
+  return HourAngle(Time(decimal_degrees_to_degrees(hour_angle)))
 
 def hour_angle_to_right_ascension(hour_angle: HourAngle, full_date: FullDate, daylight_savings: int, zone_correction: int, longitude: Longitude) -> RightAscension:
   utc = time_functions.local_civil_to_universal_time(full_date,daylight_savings,zone_correction)
@@ -45,7 +45,7 @@ def hour_angle_to_right_ascension(hour_angle: HourAngle, full_date: FullDate, da
   return Time(decimal_degrees_to_degrees(right_ascension))
 
 def equatorial_to_horizon_coordinates(equatorial_coordinates: EquatorialCoordinatesHourAngle, latitude: Latitude) -> HorizontalCoordinates:
-  hour_angle, declination = equatorial_coordinates
+  declination, hour_angle = equatorial_coordinates
   ha_decimal = degrees_to_decimal_degrees(hour_angle)
   ha_degrees = ha_decimal * 15
   ha_radians = math.radians(ha_degrees)
@@ -65,9 +65,9 @@ def equatorial_to_horizon_coordinates(equatorial_coordinates: EquatorialCoordina
   if azimuth_degrees < 0:
     azimuth_degrees += 360 # b - (360 * math.floor(b/360))
 
-  return HorizontalCoordinates((decimal_degrees_to_degrees(altitude_degrees), decimal_degrees_to_degrees(azimuth_degrees)))
+  return HorizontalCoordinates((Altitude(decimal_degrees_to_degrees(altitude_degrees)), Azimuth(decimal_degrees_to_degrees(azimuth_degrees))))
 
-def horizon_to_equatorial_coordinates(horizontal_coordinates: HorizontalCoordinates, latitude: Latitude) -> tuple:
+def horizon_to_equatorial_coordinates(horizontal_coordinates: HorizontalCoordinates, latitude: Latitude) -> EquatorialCoordinatesHourAngle:
   altitude, azimuth = horizontal_coordinates
   azimuth_decimal = degrees_to_decimal_degrees(azimuth)
   altitude_decimal = degrees_to_decimal_degrees(altitude)
@@ -86,10 +86,7 @@ def horizon_to_equatorial_coordinates(horizontal_coordinates: HorizontalCoordina
   ha_degrees = b - (360 * math.floor(b/360))
   ha_hms = ha_degrees / 15
 
-  ha_hours, ha_minutes, ha_seconds = decimal_degrees_to_degrees(ha_hms)
-  declination_hours, declination_minutes, declination_seconds = decimal_degrees_to_degrees(declination_degrees)
-
-  return (ha_hours, ha_minutes, ha_seconds, declination_hours, declination_minutes, declination_seconds)
+  return EquatorialCoordinatesHourAngle((Declination(decimal_degrees_to_degrees(declination_degrees)), HourAngle(Time(decimal_degrees_to_degrees(ha_hms)))))
 
 def mean_obliquity_ecliptic(greenwich_date: Date) -> Obliquity:
   julianDate = time_functions.greenwich_to_julian_date(greenwich_date)
@@ -128,10 +125,10 @@ def ecliptic_to_equatorial_coordinates(ecliptic_coordinates: EclipticCoordinates
   right_ascension_deg_corrected = right_ascension_deg - 360 * math.floor(right_ascension_deg/360)
   right_ascension = right_ascension_deg_corrected / 15
 
-  return EquatorialCoordinatesRightAscension((Time(decimal_degrees_to_degrees(right_ascension)), decimal_degrees_to_degrees(declination_deg)))
+  return EquatorialCoordinatesRightAscension((Declination(decimal_degrees_to_degrees(declination_deg)), Time(decimal_degrees_to_degrees(right_ascension))))
 
 def equatorial_to_ecliptic_coordinates(equatorial_coordinates: EquatorialCoordinatesRightAscension, greenwich_date: Date) -> EclipticCoordinates:
-  right_ascension, declination = equatorial_coordinates
+  declination, right_ascension = equatorial_coordinates
   right_ascension_degrees = degrees_to_decimal_degrees(right_ascension) * 15
   declination_deg = degrees_to_decimal_degrees(declination)
   right_ascension_rad = math.radians(right_ascension_degrees)
@@ -147,11 +144,11 @@ def equatorial_to_ecliptic_coordinates(equatorial_coordinates: EquatorialCoordin
   ecliptic_long_deg = math.degrees(ecliptic_long_rad)
   ecliptic_long_deg_corrected = ecliptic_long_deg - 360 * math.floor(ecliptic_long_deg / 360)
 
-  return EclipticCoordinates((decimal_degrees_to_degrees(ecliptic_long_deg_corrected),decimal_degrees_to_degrees(ecliptic_lat_deg)))
+  return EclipticCoordinates((decimal_degrees_to_degrees(ecliptic_lat_deg), decimal_degrees_to_degrees(ecliptic_long_deg_corrected)))
 
-# if __name__ == '__main__':
-#     ra = Time((18,37,47.5))
-#     ha = right_ascension_to_hour_angle(ra,FullDate((Date((2024,8,7)),Time((22,10,00)))),1,1,11.40911)
-#     hc = equatorial_to_horizon_coordinates(EquatorialCoordinatesHourAngle((ha,Degrees((38,48,30.6)))), 48.13979 )
-
-#     print(hc)
+if __name__ == '__main__':
+    ra = Time((18,37,47.5))
+    ha = right_ascension_to_hour_angle(ra,FullDate((Date((2024,8,7)),Time((22,10,00)))),1,1,11.40911)
+    al, az = equatorial_to_horizon_coordinates(EquatorialCoordinatesHourAngle((Declination(Degrees((38,48,30.6))), ha)), 48.13979 )
+      
+    print(al, az)
