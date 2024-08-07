@@ -22,7 +22,7 @@ class CoordinateTestMethods(unittest.TestCase):
 
     full_date = FullDate((Date((1980,4,22)),Time((14,36,51.67))))
 
-    self.assertEqual(coordinate_functions.right_ascension_to_hour_angle(Degrees((18,32,21)),full_date,0,-4,-64), (9, 52, 23.66), msg)
+    self.assertEqual(coordinate_functions.right_ascension_to_hour_angle(Time((18,32,21)),full_date,0,-4,-64), (9, 52, 23.66), msg)
 
   def test_hour_angle_to_right_ascension(self):
     msg = 'test_hour_angle_to_right_ascension fail'
@@ -61,7 +61,7 @@ class CoordinateTestMethods(unittest.TestCase):
   def test_equatorial_to_ecliptic_coordinates(self):
     msg = 'test_equatorial_to_ecliptic_coordinates fail'
 
-    coordinates = EquatorialCoordinatesRightAscension((Degrees((9,34,53.4)), Degrees((19,32,8.52))))
+    coordinates = EquatorialCoordinatesRightAscension((Time((9,34,53.4)), Degrees((19,32,8.52))))
 
     self.assertEqual(coordinate_functions.equatorial_to_ecliptic_coordinates(coordinates,Date((2009,7,6))), ((139,41,10.25),(4,52,30.99)), msg)
 
