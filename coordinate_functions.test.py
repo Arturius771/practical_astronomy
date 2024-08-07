@@ -34,7 +34,7 @@ class CoordinateTestMethods(unittest.TestCase):
   def test_equatorial_to_horizon_coordinates(self):
     msg = 'test_equatorial_to_horizon_coordinates fail'
     
-    coordinates = EquatorialCoordinates((Degrees((5,51,44)),Degrees((23,13,10))))
+    coordinates = EquatorialCoordinatesHourAngle((Degrees((5,51,44)),Degrees((23,13,10))))
 
     self.assertEqual(coordinate_functions.equatorial_to_horizon_coordinates(coordinates,52), ((283,16,15.7),(19,20,3.64)), msg)
 
@@ -61,7 +61,7 @@ class CoordinateTestMethods(unittest.TestCase):
   def test_equatorial_to_ecliptic_coordinates(self):
     msg = 'test_equatorial_to_ecliptic_coordinates fail'
 
-    coordinates = EquatorialCoordinates((Degrees((9,34,53.4)), Degrees((19,32,8.52))))
+    coordinates = EquatorialCoordinatesRightAscension((Degrees((9,34,53.4)), Degrees((19,32,8.52))))
 
     self.assertEqual(coordinate_functions.equatorial_to_ecliptic_coordinates(coordinates,Date((2009,7,6))), ((139,41,10.25),(4,52,30.99)), msg)
 

@@ -111,12 +111,12 @@ def finding_day_of_week(julianDate: JulianDate) -> str:
   else: return "Saturday"
 
 def hours_minutes_seconds_to_decimal_time(time: Time, twenty_four_hour_clock = True) -> DecimalTime:
-  c = utils.hours_minutes_seconds_to_decimal(time)
+  c = utils.time_to_decimal(time)
 
   return c if twenty_four_hour_clock or c <= 12 else c - 12
 
 def decimal_hours_to_hours_minutes_seconds(decimalTime: DecimalTime) -> Time:
-  hours, minutes, seconds = utils.decimal_to_hours_minutes_seconds(decimalTime)
+  hours, minutes, seconds = utils.decimal_to_time(decimalTime)
   hours = hours * -1 if decimalTime < 0 else hours
 
   return Time((hours, minutes, seconds))
@@ -187,8 +187,10 @@ def greenwich_sidereal_to_local_sidereal_time(greenwich_sidereal_time: Time, lon
 
   return non_decimal_lst
 
-def local_sidereal_to_greenwich_sidereal_time(local_sidereal_time: Time, longitude: int) -> Time:
+def local_sidereal_to_greenwich_sidereal_time(local_sidereal_time: Time, longitude: Longitude) -> Time:
   lst_decimal = hours_minutes_seconds_to_decimal_time(local_sidereal_time)
+  if isinstance(longitude, tuple):
+    longitude = longitude[0]
   offset = longitude / 15
   gst = lst_decimal - offset
   gst1 = gst - (24 * math.floor(gst / 24))

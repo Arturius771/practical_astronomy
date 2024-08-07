@@ -10,7 +10,7 @@ from astronomy_types import *
 #     return radians * (180 / math.pi) or math.degrees(radians)
 
 
-def hours_minutes_seconds_to_decimal(time: Time) -> DecimalTime:
+def time_to_decimal(time: Time) -> DecimalTime:
   hours, minutes, seconds = time
   a = seconds / 60
   b = (a + minutes) / 60
@@ -18,7 +18,7 @@ def hours_minutes_seconds_to_decimal(time: Time) -> DecimalTime:
 
   return unsigned_decimal
 
-def decimal_to_hours_minutes_seconds(decimal_value: DecimalTime) -> Time:
+def decimal_to_time(decimal_value: DecimalTime) -> Time:
   unsigned_decimal = abs(decimal_value)
   total_seconds = unsigned_decimal * 3600
   total_seconds_rounded = round((total_seconds % 60), 2)

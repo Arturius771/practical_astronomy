@@ -5,13 +5,13 @@ import utils
 
 def degrees_to_decimal_degrees(degrees: Degrees | RightAscension) -> DecimalDegrees:
   angle, minutes, seconds = degrees
-  unsigned_degrees = utils.hours_minutes_seconds_to_decimal(Time((abs(angle), abs(minutes), abs(seconds))))
+  unsigned_degrees = utils.time_to_decimal(Time((abs(angle), abs(minutes), abs(seconds))))
   decimal_degrees = -unsigned_degrees if angle < 0 or minutes < 0 or seconds < 0 else unsigned_degrees 
   return decimal_degrees
 
 
 def decimal_degrees_to_degrees(decimal_degree: DecimalDegrees) -> Degrees:
-    unsigned_degrees, minutes, seconds = utils.decimal_to_hours_minutes_seconds(decimal_degree)
+    unsigned_degrees, minutes, seconds = utils.decimal_to_time(decimal_degree)
     signed_degrees = -1 * unsigned_degrees if decimal_degree < 0 else unsigned_degrees
   
     return Degrees((signed_degrees, minutes, seconds))
@@ -21,7 +21,7 @@ def right_ascension_to_hour_angle(right_ascension: RightAscension, local_date_an
   utc = time_functions.local_civil_to_universal_time(local_date_and_time, daylight_savings, zone_correction)
   gst = time_functions.universal_to_greenwich_sidereal_time(utc)
   local_sidereal_time = time_functions.greenwich_sidereal_to_local_sidereal_time(gst, longitude)
-  lst_dec = utils.hours_minutes_seconds_to_decimal(local_sidereal_time)
+  lst_dec = utils.time_to_decimal(local_sidereal_time)
 
   ra_decimal = degrees_to_decimal_degrees(Degrees(right_ascension))
   hour_angle = lst_dec - ra_decimal
@@ -45,7 +45,7 @@ def hour_angle_to_right_ascension(hour_angle: HourAngle, full_date: FullDate, da
   return decimal_degrees_to_degrees(right_ascension)
 
 def equatorial_to_horizon_coordinates(equatorial_coordinates: EquatorialCoordinates, latitude: Latitude) -> HorizontalCoordinates:
-  hour_angle, declination = equatorial_coordinates
+  hour_angle, declination = EquatorialCoordinatesHourAngle(equatorial_coordinates)
   ha_decimal = degrees_to_decimal_degrees(hour_angle)
   ha_degrees = ha_decimal * 15
   ha_radians = math.radians(ha_degrees)
@@ -128,12 +128,12 @@ def ecliptic_to_equatorial_coordinates(ecliptic_coordinates: EclipticCoordinates
   right_ascension_deg_corrected = right_ascension_deg - 360 * math.floor(right_ascension_deg/360)
   right_ascension = right_ascension_deg_corrected / 15
 
-  return EquatorialCoordinates((decimal_degrees_to_degrees(right_ascension), decimal_degrees_to_degrees(declination_deg)))
+  return EquatorialCoordinatesRightAscension((decimal_degrees_to_degrees(right_ascension), decimal_degrees_to_degrees(declination_deg)))
 
 def equatorial_to_ecliptic_coordinates(equatorial_coordinates: EquatorialCoordinates, greenwich_date: Date) -> EclipticCoordinates:
-  ra, dec = equatorial_coordinates
-  right_ascension_degrees = degrees_to_decimal_degrees(ra) * 15
-  declination_deg = degrees_to_decimal_degrees(dec)
+  right_ascension, declination = EquatorialCoordinatesRightAscension(equatorial_coordinates)
+  right_ascension_degrees = degrees_to_decimal_degrees(right_ascension) * 15
+  declination_deg = degrees_to_decimal_degrees(declination)
   right_ascension_rad = math.radians(right_ascension_degrees)
   declination_rad = math.radians(declination_deg)
   obliquity_deg = mean_obliquity_ecliptic(greenwich_date)
