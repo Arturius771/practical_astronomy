@@ -1,4 +1,5 @@
 import math
+from typing import List
 from astronomy_types import *
 import utils
 
@@ -99,16 +100,13 @@ def julian_to_greenwich_date(julianDate: JulianDate) -> Date:
 def julian_date_to_j2000(julianDate: JulianDate) -> Epoch:
   return julianDate - 2451545.0
 
-def finding_day_of_week(julianDate: JulianDate) -> str:
-  a = (julianDate + 1.5) % 7
+def finding_day_of_week(julianDate: JulianDate) -> DaysOfWeek:
+  julianDay = (julianDate + 1.5) % 7
+  dayNumber = math.floor(julianDay)
 
-  if a < 1: return "Sunday"
-  if a < 2: return "Monday"
-  if a < 3: return "Tuesday"
-  if a < 4: return "Wednesday"
-  if a < 5: return "Thursday"
-  if a < 6: return "Friday"
-  else: return "Saturday"
+  days = [DaysOfWeek.Sunday, DaysOfWeek.Monday, DaysOfWeek.Tuesday, DaysOfWeek.Wednesday, DaysOfWeek.Thursday, DaysOfWeek.Friday, DaysOfWeek.Saturday]
+
+  return days[dayNumber]
 
 def hours_minutes_seconds_to_decimal_time(time: Time, twenty_four_hour_clock = True) -> DecimalTime:
   c = utils.time_to_decimal(time)

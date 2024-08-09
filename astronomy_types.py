@@ -1,4 +1,14 @@
 from typing import NewType, Tuple, Union
+from enum import Enum
+
+class DaysOfWeek(str, Enum):
+    Sunday = "Sunday"
+    Monday = "Monday"
+    Tuesday = "Tuesday"
+    Wednesday = "Wednesday"
+    Thursday = "Thursday"
+    Friday = "Friday"
+    Saturday = "Saturday"
 
 type Year = int
 type Month = int
