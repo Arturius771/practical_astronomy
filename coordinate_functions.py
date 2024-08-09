@@ -3,7 +3,7 @@ from astronomy_types import *
 import time_functions
 import utils
 
-def degrees_to_decimal_degrees(degrees: Degrees | RightAscension) -> DecimalDegrees:
+def degrees_to_decimal_degrees(degrees: Degrees) -> DecimalDegrees:
   angle, minutes, seconds = degrees
   unsigned_degrees = utils.time_to_decimal(Time((abs(angle), abs(minutes), abs(seconds))))
   decimal_degrees = -unsigned_degrees if angle < 0 or minutes < 0 or seconds < 0 else unsigned_degrees 
@@ -36,7 +36,7 @@ def hour_angle_to_right_ascension(hour_angle: HourAngle, full_date: FullDate, da
   gst = time_functions.universal_to_greenwich_sidereal_time(utc)
   lst = time_functions.greenwich_sidereal_to_local_sidereal_time(gst, longitude)
   lst_dec = degrees_to_decimal_degrees(Degrees(lst))
-  ha_decimal = degrees_to_decimal_degrees(hour_angle)
+  ha_decimal = degrees_to_decimal_degrees(Degrees(hour_angle))
   right_ascension = lst_dec - ha_decimal
 
   if right_ascension < 0:
@@ -46,7 +46,7 @@ def hour_angle_to_right_ascension(hour_angle: HourAngle, full_date: FullDate, da
 
 def equatorial_to_horizon_coordinates(equatorial_coordinates: EquatorialCoordinatesHourAngle, latitude: Latitude) -> HorizontalCoordinates:
   declination, hour_angle = equatorial_coordinates
-  ha_decimal = degrees_to_decimal_degrees(hour_angle)
+  ha_decimal = degrees_to_decimal_degrees(Degrees(hour_angle))
   ha_degrees = ha_decimal * 15
   ha_radians = math.radians(ha_degrees)
   declination_decimal = degrees_to_decimal_degrees(declination)
@@ -129,7 +129,7 @@ def ecliptic_to_equatorial_coordinates(ecliptic_coordinates: EclipticCoordinates
 
 def equatorial_to_ecliptic_coordinates(equatorial_coordinates: EquatorialCoordinatesRightAscension, greenwich_date: Date) -> EclipticCoordinates:
   declination, right_ascension = equatorial_coordinates
-  right_ascension_degrees = degrees_to_decimal_degrees(right_ascension) * 15
+  right_ascension_degrees = degrees_to_decimal_degrees(Degrees(right_ascension)) * 15
   declination_deg = degrees_to_decimal_degrees(declination)
   right_ascension_rad = math.radians(right_ascension_degrees)
   declination_rad = math.radians(declination_deg)
