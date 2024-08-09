@@ -40,3 +40,4 @@ HorizontalCoordinates = NewType('HorizontalCoordinates', Tuple[Altitude, Azimuth
 EquatorialCoordinatesHourAngle = NewType('EquatorialCoordinatesHourAngle', Tuple[Declination, HourAngle])
 EquatorialCoordinatesRightAscension = NewType('EquatorialCoordinatesRightAscension', Tuple[Declination, RightAscension])
 EclipticCoordinates = NewType('EclipticCoordinates', Tuple[Latitude, Longitude])
+GalacticCoordinates = NewType('GalacticCoordinates', Tuple[Latitude, Longitude])

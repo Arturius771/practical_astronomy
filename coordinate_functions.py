@@ -63,7 +63,7 @@ def equatorial_to_horizon_coordinates(equatorial_coordinates: EquatorialCoordina
   azimuth_degrees = math.degrees(azimuth_radians)
 
   if azimuth_degrees < 0:
-    azimuth_degrees += 360 # b - (360 * math.floor(b/360))
+    azimuth_degrees += 360 # TODO: b - (360 * math.floor(b/360))
 
   return HorizontalCoordinates((Altitude(decimal_degrees_to_degrees(altitude_degrees)), Azimuth(decimal_degrees_to_degrees(azimuth_degrees))))
 
@@ -146,9 +146,34 @@ def equatorial_to_ecliptic_coordinates(equatorial_coordinates: EquatorialCoordin
 
   return EclipticCoordinates((decimal_degrees_to_degrees(ecliptic_lat_deg), decimal_degrees_to_degrees(ecliptic_long_deg_corrected)))
 
-if __name__ == '__main__':
-    ra = Time((18,37,47.5))
-    ha = right_ascension_to_hour_angle(ra,FullDate((Date((2024,8,7)),Time((22,10,00)))),1,1,11.40911)
-    al, az = equatorial_to_horizon_coordinates(EquatorialCoordinatesHourAngle((Declination(Degrees((38,48,30.6))), ha)), 48.13979 )
+
+def equatorial_to_galactic_coordinates(equatorial_coordinates: EquatorialCoordinatesRightAscension) -> GalacticCoordinates:
+  dec, ra = equatorial_coordinates
+  dec_decimal = degrees_to_decimal_degrees(dec)
+  ra_decimal = degrees_to_decimal_degrees(Degrees(ra)) * 15 # TODO extract to shared function
+  dec_rad = math.radians(dec_decimal)
+  ra_rad = math.radians(ra_decimal)
+  b = math.cos(dec_rad) * math.cos(math.radians(27.4)) * math.cos(ra_rad - math.radians(192.25)) + math.sin(dec_rad) * math.sin(math.radians(27.4))
+  b_rad = math.asin(b)
+  b_deg = math.degrees(b_rad)
+  y = math.sin(dec_rad) - b * math.sin(math.radians(27.4))
+  x = math.cos(dec_rad) * math.sin(ra_rad - math.radians(192.25)) * math.cos(math.radians(27.4))
+  longitude = math.degrees(math.atan2(y,x)) + 33
+  longitude_corrected = longitude - 360 * math.floor(longitude/360) # TODO: b - (360 * math.floor(b/360))
+
+  lat = decimal_degrees_to_degrees(b_deg)
+  lon = decimal_degrees_to_degrees(longitude_corrected)
+
+  return GalacticCoordinates((lat, lon))
+
+
+   
+
+
+# Quick find
+# if __name__ == '__main__':
+#     ra = Time((18,37,47.5))
+#     ha = right_ascension_to_hour_angle(ra,FullDate((Date((2024,8,7)),Time((22,10,00)))),1,1,11.40911)
+#     al, az = equatorial_to_horizon_coordinates(EquatorialCoordinatesHourAngle((Declination(Degrees((38,48,30.6))), ha)), 48.13979 )
       
-    print(al, az)
+#     print(al, az)

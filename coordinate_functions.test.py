@@ -65,5 +65,14 @@ class CoordinateTestMethods(unittest.TestCase):
 
     self.assertEqual(coordinate_functions.equatorial_to_ecliptic_coordinates(coordinates,Date((2009,7,6))), ((4,52,30.99), (139,41,10.25)), msg)
 
+  def test_equatorial_to_galactic_coordinates(self):
+    msg = 'test_equatorial_to_galactic_coordinates fail'
+
+    coordinates = EquatorialCoordinatesRightAscension((Declination(Degrees((10,3,11))), Time((10,21,0))))
+
+    self.assertEqual(coordinate_functions.equatorial_to_galactic_coordinates(coordinates), ((51,7,20.16), (232,14,52.38)), msg)
+
+
+
 if __name__ == '__main__':
     unittest.main()
