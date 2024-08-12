@@ -61,16 +61,23 @@ class CoordinateTestMethods(unittest.TestCase):
   def test_equatorial_to_ecliptic_coordinates(self):
     msg = 'test_equatorial_to_ecliptic_coordinates fail'
 
-    coordinates = EquatorialCoordinatesRightAscension((Declination(Degrees((19,32,8.52))), Time((9,34,53.4))))
+    coordinates = EquatorialCoordinates((Declination(Degrees((19,32,8.52))), Time((9,34,53.4))))
 
     self.assertEqual(coordinate_functions.equatorial_to_ecliptic_coordinates(coordinates,Date((2009,7,6))), ((4,52,30.99), (139,41,10.25)), msg)
 
   def test_equatorial_to_galactic_coordinates(self):
     msg = 'test_equatorial_to_galactic_coordinates fail'
 
-    coordinates = EquatorialCoordinatesRightAscension((Declination(Degrees((10,3,11))), Time((10,21,0))))
+    coordinates = EquatorialCoordinates((Declination(Degrees((10,3,11))), Time((10,21,0))))
 
     self.assertEqual(coordinate_functions.equatorial_to_galactic_coordinates(coordinates), ((51,7,20.16), (232,14,52.38)), msg)
+
+  def test_galactic_to_equatorial_coordinates(self):
+    msg = 'test_galactic_to_equatorial_coordinates fail'
+
+    coordinates = GalacticCoordinates((Degrees((51,7,20.16)), Degrees((232, 14, 52.38))))
+
+    self.assertEqual(coordinate_functions.galactic_to_equatorial_coordinates(coordinates), ((10,3,11.0), (10,21,0)), msg)
 
 
 
