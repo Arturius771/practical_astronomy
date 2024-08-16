@@ -105,10 +105,6 @@ def mean_obliquity_ecliptic(greenwich_date: Date) -> Obliquity:
   de = (t * (46.815 + t * (0.0006-(t * 0.00181)))) / 3600
   obliquity = 23.439292 - de
 
-  # There is a signficant difference between the Visual Basic and Python outputs
-  # This seems to fix it, but needs to be checked further
-  # obliquity_corrected = obliquity + 0.001176447533936198
-
   return obliquity 
 
 def ecliptic_to_equatorial_coordinates(ecliptic_coordinates: EclipticCoordinates, greenwich_date: Date) -> EquatorialCoordinates:
@@ -210,7 +206,7 @@ def galactic_to_equatorial_coordinates(galactic_coordinates: GalacticCoordinates
 
   return EquatorialCoordinates((Declination(declination_degrees), Time(right_ascension_hours)))
 
-# Quick find
+
 # if __name__ == '__main__':
 #     ra = Time((18,37,47.5))
 #     ha = right_ascension_to_hour_angle(ra,FullDate((Date((2024,8,7)),Time((22,10,00)))),1,1,11.40911)

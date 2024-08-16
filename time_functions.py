@@ -127,6 +127,7 @@ def local_civil_to_universal_time(local_time_and_date: FullDate, daylight_saving
   greenwich_calendar_day = local_day + (ut / 24)
   jd = greenwich_to_julian_date(Date((local_year, local_month, greenwich_calendar_day)))
   greenwich_year, greenwich_month, greenwich_day = julian_to_greenwich_date(jd)
+
   utc = decimal_hours_to_hours_minutes_seconds(24 * (greenwich_calendar_day - math.floor(greenwich_calendar_day)))
   date = Date((greenwich_year, greenwich_month, math.floor(greenwich_day)))
 
@@ -140,6 +141,7 @@ def universal_to_local_civil_time(universal_time_and_date: FullDate, timezone_of
   ljd = jd + (lct / 24)
   local_civil_year, local_civil_month, local_civil_day = julian_to_greenwich_date(ljd)
   integer_day = math.floor(local_civil_day)
+
   local_date = Date((local_civil_year, local_civil_month, integer_day))
   lct = Time(decimal_hours_to_hours_minutes_seconds((local_civil_day - integer_day) * 24))
   
@@ -155,6 +157,7 @@ def universal_to_greenwich_sidereal_time(universal_time_and_date: FullDate) -> T
   ut = hours_minutes_seconds_to_decimal_time(time)
   a = ut * 1.002737909
   gst0 = a + t1
+
   gst = gst0 - (24 * math.floor(gst0 / 24))
 
   return decimal_hours_to_hours_minutes_seconds(gst)
@@ -170,6 +173,7 @@ def greenwich_sidereal_to_universal_time(greenwich_date_and_sidereal_time: FullD
   a = gst_decimal - t1
   b = a - (24 * math.floor(a / 24))
   ut = b * 0.9972695663
+
   utc = decimal_hours_to_hours_minutes_seconds(ut)
 
   return FullDate((greenwich_date, utc))
@@ -181,6 +185,7 @@ def greenwich_sidereal_to_local_sidereal_time(greenwich_sidereal_time: Time, lon
   offset = longitude / 15
   lst = gst_decimal + offset
   lst1 = lst - (24 * math.floor(lst / 24))
+
   non_decimal_lst = decimal_hours_to_hours_minutes_seconds(lst1)
 
   return non_decimal_lst
@@ -192,6 +197,7 @@ def local_sidereal_to_greenwich_sidereal_time(local_sidereal_time: Time, longitu
   offset = longitude / 15
   gst = lst_decimal - offset
   gst1 = gst - (24 * math.floor(gst / 24))
+
   non_decimal_lst = decimal_hours_to_hours_minutes_seconds(gst1)
 
   return non_decimal_lst
