@@ -19,3 +19,4 @@ You can run the tests in your terminal: `python3 {filename}` eg. `python3 time_f
 - Finish implementing all of the algorithms from the book.
 - EITHER: add to [afmaths](https://pypi.org/project/afmaths/) library
 - OR: publish as an indepdendent module, which is preferable
+- Spin off `astronomy_types` into its own project

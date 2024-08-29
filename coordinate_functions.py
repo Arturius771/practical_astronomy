@@ -7,6 +7,7 @@ def degrees_to_decimal_degrees(degrees: Degrees) -> DecimalDegrees:
   angle, minutes, seconds = degrees
   unsigned_degrees = utils.time_to_decimal(Time((abs(angle), abs(minutes), abs(seconds))))
   decimal_degrees = -unsigned_degrees if angle < 0 or minutes < 0 or seconds < 0 else unsigned_degrees 
+
   return decimal_degrees
 
 
@@ -73,7 +74,10 @@ def equatorial_to_horizon_coordinates(equatorial_coordinates: EquatorialCoordina
   if azimuth_degrees < 0:
     azimuth_degrees += 360 # TODO: b - (360 * math.floor(b/360))
 
-  return HorizontalCoordinates((Altitude(decimal_degrees_to_degrees(altitude_degrees)), Azimuth(decimal_degrees_to_degrees(azimuth_degrees))))
+  altitude = Altitude(decimal_degrees_to_degrees(altitude_degrees))
+  azimuth = Azimuth(decimal_degrees_to_degrees(azimuth_degrees))
+
+  return HorizontalCoordinates((altitude, azimuth))
 
 def horizon_to_equatorial_coordinates(horizontal_coordinates: HorizontalCoordinates, latitude: Latitude) -> EquatorialCoordinatesHourAngle:
   altitude, azimuth = horizontal_coordinates
@@ -87,7 +91,8 @@ def horizon_to_equatorial_coordinates(horizontal_coordinates: HorizontalCoordina
   latitude_radians = math.radians(latitude)
   declination_sin = math.sin(altitude_radians) * math.sin(latitude_radians) + math.cos(altitude_radians) * math.cos(latitude_radians) * math.cos(azimuth_radians)
   declination_radians = math.asin(declination_sin)
-  declination_degrees = math.degrees(declination_radians)
+  declination_degrees_decimal = math.degrees(declination_radians)
+  declination = Declination(decimal_degrees_to_degrees(declination_degrees_decimal))
 
   y = -math.cos(altitude_radians) * math.cos(latitude_radians) * math.sin(azimuth_radians)
   x = math.sin(altitude_radians) - math.sin(latitude_radians) * declination_sin
@@ -96,7 +101,9 @@ def horizon_to_equatorial_coordinates(horizontal_coordinates: HorizontalCoordina
   ha_hours = b - (360 * math.floor(b/360))
   ha = hours_to_degrees(ha_hours)
 
-  return EquatorialCoordinatesHourAngle((Declination(decimal_degrees_to_degrees(declination_degrees)), HourAngle(Time(decimal_degrees_to_degrees(ha)))))
+  hour_angle = HourAngle(Time(decimal_degrees_to_degrees(ha)))
+
+  return EquatorialCoordinatesHourAngle((declination, hour_angle))
 
 def mean_obliquity_ecliptic(greenwich_date: Date) -> Obliquity:
   julianDate = time_functions.greenwich_to_julian_date(greenwich_date)
@@ -125,16 +132,19 @@ def ecliptic_to_equatorial_coordinates(ecliptic_coordinates: EclipticCoordinates
   obliquity_rad = math.radians(obliquity_deg)
   declination_sin = math.sin(eclat_rad) * math.cos(obliquity_rad) + math.cos(eclat_rad) * math.sin(obliquity_rad) * math.sin(eclon_rad)
   declination_rad = math.asin(declination_sin)
-  declination_deg = math.degrees(declination_rad)
+  declination_degrees_decimal = math.degrees(declination_rad)
+  declination_deg = Declination(decimal_degrees_to_degrees(declination_degrees_decimal))
 
   y = math.sin(eclon_rad) * math.cos(obliquity_rad) - math.tan(eclat_rad) * math.sin(obliquity_rad)
   x = math.cos(eclon_rad)
   right_ascension_rad = math.atan2(y,x)
   right_ascension_deg = math.degrees(right_ascension_rad)
   right_ascension_deg_corrected = right_ascension_deg - 360 * math.floor(right_ascension_deg/360)
-  right_ascension =  hours_to_degrees(right_ascension_deg_corrected)
+  right_ascension_degrees =  hours_to_degrees(right_ascension_deg_corrected)
 
-  return EquatorialCoordinates((Declination(decimal_degrees_to_degrees(declination_deg)), Time(decimal_degrees_to_degrees(right_ascension))))
+  right_ascension = Time(decimal_degrees_to_degrees(right_ascension_degrees))
+
+  return EquatorialCoordinates((declination_deg, right_ascension))
 
 def equatorial_to_ecliptic_coordinates(equatorial_coordinates: EquatorialCoordinates, greenwich_date: Date) -> EclipticCoordinates:
   declination, right_ascension = equatorial_coordinates
@@ -155,7 +165,10 @@ def equatorial_to_ecliptic_coordinates(equatorial_coordinates: EquatorialCoordin
   ecliptic_long_deg = math.degrees(ecliptic_long_rad)
   ecliptic_long_deg_corrected = ecliptic_long_deg - 360 * math.floor(ecliptic_long_deg / 360) # TODO
 
-  return EclipticCoordinates((decimal_degrees_to_degrees(ecliptic_lat_deg), decimal_degrees_to_degrees(ecliptic_long_deg_corrected)))
+  latitude = decimal_degrees_to_degrees(ecliptic_lat_deg)
+  longitude = decimal_degrees_to_degrees(ecliptic_long_deg_corrected)
+
+  return EclipticCoordinates((latitude, longitude))
 
 
 def equatorial_to_galactic_coordinates(equatorial_coordinates: EquatorialCoordinates) -> GalacticCoordinates:
@@ -174,10 +187,10 @@ def equatorial_to_galactic_coordinates(equatorial_coordinates: EquatorialCoordin
   longitude = math.degrees(math.atan2(y,x)) + 33
   longitude_corrected = longitude - 360 * math.floor(longitude/360) # TODO: b - (360 * math.floor(b/360))
 
-  lat = decimal_degrees_to_degrees(b_deg)
-  lon = decimal_degrees_to_degrees(longitude_corrected)
+  latitude = decimal_degrees_to_degrees(b_deg)
+  longitude = decimal_degrees_to_degrees(longitude_corrected)
 
-  return GalacticCoordinates((lat, lon))
+  return GalacticCoordinates((latitude, longitude))
 
 def galactic_to_equatorial_coordinates(galactic_coordinates: GalacticCoordinates) -> EquatorialCoordinates:
   lat, lon = galactic_coordinates
@@ -195,8 +208,8 @@ def galactic_to_equatorial_coordinates(galactic_coordinates: GalacticCoordinates
   lon_rad = math.radians(lon_dec)
   sin_dec = math.cos(lat_rad) * math.cos(math.radians(27.4)) * math.sin(lon_rad - math.radians(33)) + math.sin(lat_rad) * math.sin(math.radians(27.4))
   declination = math.asin(sin_dec)
-  declination_degrees_dec = math.degrees(declination)
-  declination_degrees = decimal_degrees_to_degrees(declination_degrees_dec)
+  declination_degrees_decimal = math.degrees(declination)
+  declination_degrees = Declination(decimal_degrees_to_degrees(declination_degrees_decimal))
 
   y = math.cos(lat_rad) * math.cos(lon_rad - math.radians(33))
   x = math.sin(lat_rad) * math.cos(math.radians(27.4)) - math.cos(lat_rad) * math.sin(math.radians(27.4)) * math.sin(lon_rad - math.radians(33))
@@ -204,7 +217,9 @@ def galactic_to_equatorial_coordinates(galactic_coordinates: GalacticCoordinates
   right_ascension_corrected = right_ascension - 360 * math.floor(right_ascension/360)
   right_ascension_hours = decimal_degrees_to_degrees(hours_to_degrees(right_ascension_corrected))
 
-  return EquatorialCoordinates((Declination(declination_degrees), Time(right_ascension_hours)))
+  right_ascension = Time(right_ascension_hours)
+
+  return EquatorialCoordinates((declination_degrees, right_ascension))
 
 
 # if __name__ == '__main__':
