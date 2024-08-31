@@ -29,7 +29,6 @@ def right_ascension_to_hour_angle(right_ascension: RightAscension, local_date_an
   gst = time_functions.universal_to_greenwich_sidereal_time(utc)
   local_sidereal_time = time_functions.greenwich_sidereal_to_local_sidereal_time(gst, longitude)
   lst_dec = utils.time_to_decimal(local_sidereal_time)
-
   ra_decimal = degrees_to_decimal_degrees(Degrees(right_ascension))
   hour_angle = lst_dec - ra_decimal
 
@@ -54,15 +53,18 @@ def hour_angle_to_right_ascension(hour_angle: HourAngle, full_date: FullDate, da
 def equatorial_to_horizon_coordinates(equatorial_coordinates: EquatorialCoordinatesHourAngle, latitude: Latitude) -> HorizontalCoordinates:
   declination, hour_angle = equatorial_coordinates
 
+  if isinstance(latitude, tuple):
+        latitude = degrees_to_decimal_degrees(latitude)
+
   ha_decimal = degrees_to_decimal_degrees(Degrees(hour_angle))
   ha_degrees =  degrees_to_hours(ha_decimal)
   ha_radians = math.radians(ha_degrees)
   declination_decimal = degrees_to_decimal_degrees(declination)
   declination_radians = math.radians(declination_decimal)
-  if isinstance(latitude, tuple):
-        latitude = degrees_to_decimal_degrees(latitude)
   lat_radians = math.radians(latitude)
+
   sin_a = math.sin(declination_radians) * math.sin(lat_radians) + math.cos(declination_radians) * math.cos(lat_radians) * math.cos(ha_radians)
+
   altitude_radians = math.asin(sin_a)
   altitude_degrees = math.degrees(altitude_radians)
 
@@ -82,14 +84,17 @@ def equatorial_to_horizon_coordinates(equatorial_coordinates: EquatorialCoordina
 def horizon_to_equatorial_coordinates(horizontal_coordinates: HorizontalCoordinates, latitude: Latitude) -> EquatorialCoordinatesHourAngle:
   altitude, azimuth = horizontal_coordinates
 
+  if isinstance(latitude, tuple):
+        latitude = degrees_to_decimal_degrees(latitude)
+
   azimuth_decimal = degrees_to_decimal_degrees(azimuth)
   altitude_decimal = degrees_to_decimal_degrees(altitude)
   azimuth_radians = math.radians(azimuth_decimal)
   altitude_radians = math.radians(altitude_decimal)
-  if isinstance(latitude, tuple):
-        latitude = degrees_to_decimal_degrees(latitude)
   latitude_radians = math.radians(latitude)
+
   declination_sin = math.sin(altitude_radians) * math.sin(latitude_radians) + math.cos(altitude_radians) * math.cos(latitude_radians) * math.cos(azimuth_radians)
+
   declination_radians = math.asin(declination_sin)
   declination_degrees_decimal = math.degrees(declination_radians)
   declination = Declination(decimal_degrees_to_degrees(declination_degrees_decimal))
@@ -155,7 +160,9 @@ def equatorial_to_ecliptic_coordinates(equatorial_coordinates: EquatorialCoordin
   declination_rad = math.radians(declination_deg)
   obliquity_deg = mean_obliquity_ecliptic(greenwich_date)
   obliquity_rad = math.radians(obliquity_deg)
+
   ecliptic_lat_sin = math.sin(declination_rad) * math.cos(obliquity_rad) - math.cos(declination_rad) * math.sin(obliquity_rad) * math.sin(right_ascension_rad) # TODO: common pattern can be extracted to a util
+
   ecliptic_lat_rad = math.asin(ecliptic_lat_sin) - 1.3284561980173026e-05 # this value is needed to correct, cannot be applied globally
   ecliptic_lat_deg = math.degrees(ecliptic_lat_rad)
 
@@ -206,6 +213,7 @@ def galactic_to_equatorial_coordinates(galactic_coordinates: GalacticCoordinates
 
   lat_rad = math.radians(lat_dec)
   lon_rad = math.radians(lon_dec)
+
   sin_dec = math.cos(lat_rad) * math.cos(math.radians(27.4)) * math.sin(lon_rad - math.radians(33)) + math.sin(lat_rad) * math.sin(math.radians(27.4))
   declination = math.asin(sin_dec)
   declination_degrees_decimal = math.degrees(declination)
@@ -216,7 +224,6 @@ def galactic_to_equatorial_coordinates(galactic_coordinates: GalacticCoordinates
   right_ascension = math.degrees(math.atan2(y,x)) + 192.25
   right_ascension_corrected = right_ascension - 360 * math.floor(right_ascension/360)
   right_ascension_hours = decimal_degrees_to_degrees(hours_to_degrees(right_ascension_corrected))
-
   right_ascension = Time(right_ascension_hours)
 
   return EquatorialCoordinates((declination_degrees, right_ascension))
