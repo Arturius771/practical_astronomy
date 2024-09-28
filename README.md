@@ -4,7 +4,7 @@ This is a library of functions, with unit tests, written in Python 3.12, the sta
 
 All credit for the accuracy and usefulness of these algorithms goes to the original authors.
 
-# Dependencies
+# Local Development Setup
 
 ## Start/Activate a Virtual Environment
 
