@@ -11,7 +11,7 @@ def degrees_to_decimal_degrees(degrees: at.Degrees) -> at.DecimalDegrees:
 
   return decimal_degrees
 
-def decimal_degrees_to_degrees(decimal_degree: at.DecimalDegrees) -> at.at.Degrees:
+def decimal_degrees_to_degrees(decimal_degree: at.DecimalDegrees) -> at.Degrees:
     unsigned_degrees, minutes, seconds = utils.decimal_to_time(decimal_degree)
     signed_degrees = -1 * unsigned_degrees if decimal_degree < 0 else unsigned_degrees
   

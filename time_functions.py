@@ -3,7 +3,7 @@ from typing import List
 import astronomy_types as at
 import utils
 
-def date_of_easter(year: Year) -> at.Date:
+def date_of_easter(year: at.Year) -> at.Date:
   a = year % 19
   b = math.floor(year / 100)
   c = year % 100
@@ -44,7 +44,7 @@ def date_to_day_number(date: at.Date) -> int:
 
     return int(f + day)   
   
-def year_is_leap(year: Year) -> bool:
+def year_is_leap(year: at.Year) -> bool:
   year_divisable_by_4 = year % 4 == 0
   year_divisable_by_100 = year % 100 == 0
   year_divisable_by_400 = year % 400 == 0
@@ -54,7 +54,7 @@ def year_is_leap(year: Year) -> bool:
     
   return False
 
-def greenwich_to_julian_date(date: at.Date) -> JulianDate:
+def greenwich_to_julian_date(date: at.Date) -> at.JulianDate:
   year, month, day = date
   if month == 1 or month == 2:
     y = year -1
@@ -79,7 +79,7 @@ def greenwich_to_julian_date(date: at.Date) -> JulianDate:
 
   return jd
 
-def julian_to_greenwich_date(julianDate: JulianDate) -> at.Date:
+def julian_to_greenwich_date(julianDate: at.JulianDate) -> at.Date:
   jd = julianDate + 0.5
   i = math.floor(jd)
   f = jd - i
@@ -101,23 +101,23 @@ def julian_to_greenwich_date(julianDate: JulianDate) -> at.Date:
 
   return at.Date((year, month, day))
 
-def julian_date_to_j2000(julianDate: JulianDate) -> Epoch:
+def julian_date_to_j2000(julianDate: at.JulianDate) -> at.Epoch:
   return julianDate - 2451545.0
 
-def finding_day_of_week(julianDate: JulianDate) -> DaysOfWeek:
+def finding_day_of_week(julianDate: at.JulianDate) -> at.DaysOfWeek:
   julianDay = (julianDate + 1.5) % 7
   dayNumber = math.floor(julianDay)
 
-  days = [DaysOfWeek.Sunday, DaysOfWeek.Monday, DaysOfWeek.Tuesday, DaysOfWeek.Wednesday, DaysOfWeek.Thursday, DaysOfWeek.Friday, DaysOfWeek.Saturday]
+  days = [at.DaysOfWeek.Sunday, at.DaysOfWeek.Monday, at.DaysOfWeek.Tuesday, at.DaysOfWeek.Wednesday, at.DaysOfWeek.Thursday, at.DaysOfWeek.Friday, at.DaysOfWeek.Saturday]
 
   return days[dayNumber]
 
-def hours_minutes_seconds_to_decimal_time(time: at.Time, twenty_four_hour_clock = True) -> DecimalTime:
+def hours_minutes_seconds_to_decimal_time(time: at.Time, twenty_four_hour_clock = True) -> at.DecimalTime:
   c = utils.time_to_decimal(time)
 
   return c if twenty_four_hour_clock or c <= 12 else c - 12
 
-def decimal_hours_to_hours_minutes_seconds(decimalTime: DecimalTime) -> at.Time:
+def decimal_hours_to_hours_minutes_seconds(decimalTime: at.DecimalTime) -> at.Time:
   hours, minutes, seconds = utils.decimal_to_time(decimalTime)
   hours = hours * -1 if decimalTime < 0 else hours
 
