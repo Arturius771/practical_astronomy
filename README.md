@@ -4,6 +4,28 @@ This is a library of functions, with unit tests, written in Python 3.12, the sta
 
 All credit for the accuracy and usefulness of these algorithms goes to the original authors.
 
+# Dependencies
+
+## Start/Activate a Virtual Environment
+
+Start:
+
+```bash
+python3 -m venv venv
+```
+
+Activate:
+
+```bash
+source venv/bin/activate
+```
+
+## Install dependencies
+
+```bash
+pip install --upgrade -r requirements.txt
+```
+
 # Installation
 
 Clone this repo using git.
