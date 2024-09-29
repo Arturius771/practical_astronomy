@@ -1,7 +1,7 @@
 # This should eventually be added to afmaths and reimported
 
 import math
-import astronomy_types as at
+import astronomy_types as astronomy_types
 
 # def degrees_to_radians(degrees):
 #     return degrees * (math.pi / 180) or math.radians(degrees)
@@ -10,7 +10,7 @@ import astronomy_types as at
 #     return radians * (180 / math.pi) or math.degrees(radians)
 
 
-def time_to_decimal(time: at.Time) -> at.DecimalTime:
+def time_to_decimal(time: astronomy_types.Time) -> astronomy_types.DecimalTime:
   hours, minutes, seconds = time
   a = seconds / 60
   b = (a + minutes) / 60
@@ -18,7 +18,7 @@ def time_to_decimal(time: at.Time) -> at.DecimalTime:
 
   return unsigned_decimal
 
-def decimal_to_time(decimal_value: at.DecimalTime) -> at.Time:
+def decimal_to_time(decimal_value: astronomy_types.DecimalTime) -> astronomy_types.Time:
   unsigned_decimal = abs(decimal_value)
   total_seconds = unsigned_decimal * 3600
   total_seconds_rounded = round((total_seconds % 60), 2)
@@ -27,4 +27,4 @@ def decimal_to_time(decimal_value: at.DecimalTime) -> at.Time:
   minutes = math.floor((remainder) / 60) % 60
   unsigned_value = math.floor(remainder / 3600)
 
-  return at.Time((unsigned_value, minutes, seconds))
+  return astronomy_types.Time((unsigned_value, minutes, seconds))

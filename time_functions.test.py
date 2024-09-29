@@ -1,5 +1,5 @@
 import unittest
-import astronomy_types as at
+import astronomy_types as astronomy_types
 import time_functions
 
 class TimeTestMethods(unittest.TestCase):
@@ -14,15 +14,15 @@ class TimeTestMethods(unittest.TestCase):
   def test_date_to_day_number(self):
     msg = 'test_date_to_day_number fail'
 
-    self.assertEqual(time_functions.date_to_day_number(at.Date((2000,1,1))), 1, msg)
-    self.assertEqual(time_functions.date_to_day_number(at.Date((2000,12,31))), 366, msg)
-    self.assertEqual(time_functions.date_to_day_number(at.Date((1900,12,31))), 365, msg)
+    self.assertEqual(time_functions.date_to_day_number(astronomy_types.Date((2000,1,1))), 1, msg)
+    self.assertEqual(time_functions.date_to_day_number(astronomy_types.Date((2000,12,31))), 366, msg)
+    self.assertEqual(time_functions.date_to_day_number(astronomy_types.Date((1900,12,31))), 365, msg)
 
   def test_greenwich_to_julian_date(self):
     msg = 'test_greenwich_to_julian_date fail'
 
-    self.assertEqual(time_functions.greenwich_to_julian_date(at.Date((2009,6,19.75))), 2455002.25, msg)
-    self.assertEqual(time_functions.greenwich_to_julian_date(at.Date((1969,1,5))), 2440226.5, msg)
+    self.assertEqual(time_functions.greenwich_to_julian_date(astronomy_types.Date((2009,6,19.75))), 2455002.25, msg)
+    self.assertEqual(time_functions.greenwich_to_julian_date(astronomy_types.Date((1969,1,5))), 2440226.5, msg)
 
   def test_julian_date_to_j2000(self):
     msg = 'test_julian_date_to_j2000'
@@ -39,16 +39,16 @@ class TimeTestMethods(unittest.TestCase):
     msg = 'test_finding_day_of_week fail'
 
     self.assertEqual(time_functions.finding_day_of_week(2455001.5), "Friday", msg)
-    self.assertEqual(time_functions.finding_day_of_week(time_functions.greenwich_to_julian_date(at.Date((2024,4,7)))), "Sunday", msg)
+    self.assertEqual(time_functions.finding_day_of_week(time_functions.greenwich_to_julian_date(astronomy_types.Date((2024,4,7)))), "Sunday", msg)
 
   def test_hours_minutes_seconds_to_decimal_time(self):
     msg = 'test_hours_minutes_seconds_to_decimal_time fail'
 
-    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(at.Time((18,31,27))), 18.524166666666666, msg)
-    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(at.Time((18,31,27)),False), 6.524166666666666, msg)
-    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(at.Time((11,31,5)),False), 11.518055555555556, msg)
-    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(at.Time((12,00,00)),False), 12, msg)
-    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(at.Time((12,00,00))), 12, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(astronomy_types.Time((18,31,27))), 18.524166666666666, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(astronomy_types.Time((18,31,27)),False), 6.524166666666666, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(astronomy_types.Time((11,31,5)),False), 11.518055555555556, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(astronomy_types.Time((12,00,00)),False), 12, msg)
+    self.assertEqual(time_functions.hours_minutes_seconds_to_decimal_time(astronomy_types.Time((12,00,00))), 12, msg)
 
   def test_decimal_hours_to_hours_minutes_seconds(self):
     msg = 'test_decimal_hours_to_hours_minutes_seconds fail'
@@ -58,40 +58,40 @@ class TimeTestMethods(unittest.TestCase):
   def test_local_civil_to_universal_time(self):
     msg = 'test_local_civil_to_universal_time fail'
 
-    lct = at.FullDate((at.Date((2013,7,1)),at.Time((3,37,5))))
+    lct = astronomy_types.FullDate((astronomy_types.Date((2013,7,1)),astronomy_types.Time((3,37,5))))
 
     self.assertEqual(time_functions.local_civil_to_universal_time(lct,1,4), ((2013,6,30),(22,37,5.0)), msg)
 
   def test_universal_to_local_civil_time(self):
     msg = 'test_universal_to_local_civil_time fail'
 
-    utc = at.FullDate((at.Date((2013,6,30)), at.Time((22,37,0))))
+    utc = astronomy_types.FullDate((astronomy_types.Date((2013,6,30)), astronomy_types.Time((22,37,0))))
 
     self.assertEqual(time_functions.universal_to_local_civil_time(utc,4,1), ((2013,7,1),(3,37,0)), msg)
 
   def test_universal_to_greenwich_sidereal_time(self):
     msg = 'test_universal_to_greenwich_sidereal_time fail'
 
-    utc = at.FullDate((at.Date((1980,4,22)),at.Time((14,36,51.67))))
+    utc = astronomy_types.FullDate((astronomy_types.Date((1980,4,22)),astronomy_types.Time((14,36,51.67))))
 
     self.assertEqual(time_functions.universal_to_greenwich_sidereal_time(utc), (4, 40, 5.23), msg)
 
   def test_greenwich_sidereal_to_universal_time(self):
     msg = 'test_greenwich_sidereal_to_universal_time fail'
 
-    full_date = at.FullDate((at.Date((1980,4,22)),at.Time((4,40,5.23))))
+    full_date = astronomy_types.FullDate((astronomy_types.Date((1980,4,22)),astronomy_types.Time((4,40,5.23))))
 
     self.assertEqual(time_functions.greenwich_sidereal_to_universal_time(full_date), ((1980,4,22), (14,36,51.67)), msg)
 
   def test_greenwich_sidereal_to_local_sidereal_time(self):
     msg = 'test_greenwich_sidereal_to_local_sidereal_time fail'
 
-    self.assertEqual(time_functions.greenwich_sidereal_to_local_sidereal_time(at.Time((4,40,5.23)),-64), (0, 24, 5.23), msg)
+    self.assertEqual(time_functions.greenwich_sidereal_to_local_sidereal_time(astronomy_types.Time((4,40,5.23)),-64), (0, 24, 5.23), msg)
 
   def test_local_sidereal_to_greenwich_sidereal_time(self):
     msg = 'test_local_sidereal_to_greenwich_sidereal_time fail'
     
-    self.assertEqual(time_functions.local_sidereal_to_greenwich_sidereal_time(at.Time((0,24,5.23)),-64), (4, 40, 5.23), msg)
+    self.assertEqual(time_functions.local_sidereal_to_greenwich_sidereal_time(astronomy_types.Time((0,24,5.23)),-64), (4, 40, 5.23), msg)
 
   def test_year_is_leap(self):
     msg = 'test_year_is_leap fail'
