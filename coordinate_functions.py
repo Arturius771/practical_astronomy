@@ -177,7 +177,6 @@ def equatorial_to_ecliptic_coordinates(equatorial_coordinates: astronomy_types.E
 
   return astronomy_types.EclipticCoordinates((latitude, longitude))
 
-
 def equatorial_to_galactic_coordinates(equatorial_coordinates: astronomy_types.EquatorialCoordinates) -> astronomy_types.GalacticCoordinates:
   dec, ra = equatorial_coordinates
 
