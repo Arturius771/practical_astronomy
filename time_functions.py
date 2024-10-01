@@ -1,6 +1,6 @@
 import math
 from typing import List
-import astronomy_types as astronomy_types
+import astronomy_types
 import utils
 
 def date_of_easter(year: astronomy_types.Year) -> astronomy_types.Date:

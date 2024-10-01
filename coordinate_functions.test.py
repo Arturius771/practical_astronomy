@@ -1,5 +1,5 @@
 import unittest
-import astronomy_types as astronomy_types
+import astronomy_types
 import coordinate_functions
 
 

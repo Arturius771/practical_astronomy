@@ -1,7 +1,7 @@
 import math
 import time_functions
 import utils
-import astronomy_types as astronomy_types
+import astronomy_types
 
 
 def degrees_to_decimal_degrees(degrees: astronomy_types.Degrees) -> astronomy_types.DecimalDegrees:
@@ -163,7 +163,7 @@ def equatorial_to_ecliptic_coordinates(equatorial_coordinates: astronomy_types.E
 
   ecliptic_lat_sin = math.sin(declination_rad) * math.cos(obliquity_rad) - math.cos(declination_rad) * math.sin(obliquity_rad) * math.sin(right_ascension_rad) # TODO: common pattern can be extracted to a util
 
-  ecliptic_lat_rad = math.asin(ecliptic_lat_sin) - 1.3284561980173026e-05 # this value is needed to correct, cannot be applied globally
+  ecliptic_lat_rad = math.asin(ecliptic_lat_sin) - 1.3284561980173026e-05 # this value is needed to correct, cannot be applied globally TODO investigat
   ecliptic_lat_deg = math.degrees(ecliptic_lat_rad)
 
   y = math.sin(right_ascension_rad) * math.cos(obliquity_rad) + math.tan(declination_rad) * math.sin(obliquity_rad) # TODO: common pattern can be extracted to a util

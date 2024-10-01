@@ -1,7 +1,5 @@
-# This should eventually be added to afmaths and reimported
-
 import math
-import astronomy_types as astronomy_types
+import astronomy_types
 
 # def degrees_to_radians(degrees):
 #     return degrees * (math.pi / 180) or math.radians(degrees)
