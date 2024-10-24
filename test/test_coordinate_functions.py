@@ -78,8 +78,4 @@ class CoordinateTestMethods(unittest.TestCase):
     coordinates = astronomy_types.GalacticCoordinates((astronomy_types.Degrees((51,7,20.16)), astronomy_types.Degrees((232, 14, 52.38))))
 
     self.assertEqual(coordinate_functions.galactic_to_equatorial_coordinates(coordinates), ((10,3,11.0), (10,21,0)), msg)
-
-
-
-if __name__ == '__main__':
-    unittest.main()
+    

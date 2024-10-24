@@ -103,7 +103,3 @@ class TimeTestMethods(unittest.TestCase):
     self.assertEqual(time_functions.year_is_leap(2023), False, msg)
     self.assertEqual(time_functions.year_is_leap(2024), True, msg)
     self.assertEqual(time_functions.year_is_leap(2048), True, msg)
-
-
-if __name__ == '__main__':
-    unittest.main()
