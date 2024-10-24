@@ -4,6 +4,14 @@ This is a library of functions, with unit tests, written in Python 3.12, the sta
 
 All credit for the accuracy and usefulness of these algorithms goes to the original authors.
 
+# Test
+
+To run all tests run this command:
+
+```bash
+python -m unittest
+```
+
 # Local Development Setup
 
 ## Start/Activate a Virtual Environment
@@ -39,6 +47,4 @@ You can run the tests in your terminal: `python3 {filename}` eg. `python3 time_f
 # Future plans
 
 - Finish implementing all of the algorithms from the book.
-- EITHER: add to [afmaths](https://pypi.org/project/afmaths/) library
-- OR: publish as an indepdendent module, which is preferable
-- Spin off `astronomy_types` into its own project
+- Add a test runner.
