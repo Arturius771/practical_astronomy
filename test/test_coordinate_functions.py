@@ -85,4 +85,13 @@ class CoordinateTestMethods(unittest.TestCase):
     coordinates1 = at.EquatorialCoordinates((at.Declination(at.Degrees((-8,13,30))), at.RightAscension(at.Time((5,13,31.7))))) 
     coordinates2 = at.EquatorialCoordinates((at.Declination(at.Degrees((-16,41,11))), at.RightAscension(at.Time((6,44,13.4)))))
 
-    self.assertEqual(coordinate_functions.angle_difference(coordinates1, coordinates2), ((23, 40, 25.86)))
+    self.assertEqual(coordinate_functions.angle_difference(coordinates1, coordinates2), ((23, 40, 25.86)), msg)
+
+  def test_rising_and_setting(self): 
+    msg = "test_rising_and_setting fail"
+
+    coordinates = at.EquatorialCoordinates((at.Declination(at.Degrees((21,42,0))), at.RightAscension(at.Time((23,39,20))))) 
+    location = at.GeographicCoordinates((30, 64))
+    greenwich_date = at.Date((2010, 8, 24))
+
+    self.assertEqual(coordinate_functions.rising_and_setting(coordinates, location, greenwich_date, 0.5667), ((True, (14, 16, 18.018333000000002), (4, 10, 1.1783329999999999), 64.3623480385112, 295.6376519614888)), msg)

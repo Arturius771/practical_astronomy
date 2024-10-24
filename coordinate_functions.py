@@ -17,10 +17,10 @@ def decimal_degrees_to_degrees(decimal_degree: at.DecimalDegrees) -> at.Degrees:
   
     return at.Degrees((signed_degrees, minutes, seconds))
 
-def hours_to_degrees(degrees: at.DecimalDegrees) -> at.DecimalDegrees:
-  return degrees / 15
+def hours_to_degrees(hours: at.DecimalTime) -> at.DecimalDegrees:
+  return hours / 15
 
-def degrees_to_hours(degrees: at.DecimalDegrees) -> at.DecimalDegrees:
+def degrees_to_hours(degrees: at.DecimalDegrees) -> at.DecimalTime:
   return degrees * 15
   
 def right_ascension_to_hour_angle(right_ascension: at.RightAscension, local_date_and_time: at.FullDate, daylight_savings: int, zone_correction: int, longitude: at.Longitude) -> at.HourAngle:
@@ -247,7 +247,53 @@ def angle_difference(object1_coordinates: at.EquatorialCoordinates, object2_coor
   deg_d = math.degrees(rad_d)
 
   return decimal_degrees_to_degrees(deg_d)
+  
+def rising_and_setting(target_coordinates: at.EquatorialCoordinates, observer_coordinates: at.GeographicCoordinates, greenwich_date: at.Date, vertical_shift: at.DecimalDegrees) -> tuple:
+  dec, ra = target_coordinates
+  decimal_right_ascension = degrees_to_decimal_degrees(at.Degrees(ra))
+  radians_declination = math.radians(degrees_to_decimal_degrees(dec))
+  radians_vertical_shift = math.radians(vertical_shift)
+
+  lat, long = observer_coordinates
+  if isinstance(lat, tuple):
+    lat = degrees_to_decimal_degrees(lat)
+  radians_geographic_latitude = math.radians(lat)
+
+  cosine_ha = -(math.sin(radians_vertical_shift) + math.sin(radians_geographic_latitude) * math.sin(radians_declination)) / (math.cos(radians_geographic_latitude) * math.cos(radians_declination))
+  hours_h = hours_to_degrees(math.degrees(math.acos(cosine_ha)))
+
+  rise_lst = (decimal_right_ascension - hours_h) - 24 * int(((decimal_right_ascension - hours_h))/ 24)
+  set_lst = (decimal_right_ascension + hours_h) - 24 * int(((decimal_right_ascension + hours_h))/ 24)
+
+  a = math.degrees(math.acos((math.sin(radians_declination) + math.sin(radians_vertical_shift) * math.sin(radians_geographic_latitude)) / (math.cos(radians_vertical_shift) * math.cos(radians_geographic_latitude))))
+
+  rise_az = a - 360 * int(a / 360)
+  set_az = (360 - a) - 360 * int((360 - a)/ 360)
+
+  rise_greenwich_sidereal_time = time_functions.local_sidereal_to_greenwich_sidereal_time(utils.decimal_to_time(rise_lst), long)
+  rise_full_date = at.FullDate((greenwich_date, rise_greenwich_sidereal_time))
+
+  set_greenwich_sidereal_time = time_functions.local_sidereal_to_greenwich_sidereal_time(utils.decimal_to_time(set_lst), long)
+  set_full_date = at.FullDate((greenwich_date, set_greenwich_sidereal_time))
+
+  _, (r_h, r_m, r_s) = time_functions.greenwich_sidereal_to_universal_time(rise_full_date)
+  _, (s_h, s_m, s_s) = time_functions.greenwich_sidereal_to_universal_time(set_full_date)
+
+  rise_time_adjusted = at.Time((r_h, r_m, r_s + 0.008333))
+  set_time_adjusted = at.Time((s_h, s_m, s_s + 0.008333))
+
+  # TODO: needs a type perhaps, but better documentation for the return type in this function at least
+  circumpolar = True if cosine_ha < 1 else False
+
+  return (circumpolar, rise_time_adjusted, set_time_adjusted, rise_az, set_az)
+
+
+
 
 # if __name__ == '__main__':
+    
+#     coordinates = at.EquatorialCoordinates((at.Declination(at.Degrees((21,42,0))), at.RightAscension(at.Time((23,39,20))))) 
+#     location = at.GeographicCoordinates((30, 64))
+#     greenwich_date = at.Date((2010, 8, 24))
       
-#     print(angle_difference())
+#     print(rising_and_setting(coordinates, location, greenwich_date, 0.5667))
