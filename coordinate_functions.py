@@ -266,19 +266,16 @@ def rising_and_setting(target_coordinates: at.EquatorialCoordinates, observer_co
   set_lst = (decimal_right_ascension + hours_h) - 24 * int(((decimal_right_ascension + hours_h))/ 24)
 
   a = math.degrees(math.acos((math.sin(radians_declination) + math.sin(radians_vertical_shift) * math.sin(radians_geographic_latitude)) / (math.cos(radians_vertical_shift) * math.cos(radians_geographic_latitude))))
-
   rise_az = a - 360 * int(a / 360)
   set_az = (360 - a) - 360 * int((360 - a)/ 360)
 
   rise_greenwich_sidereal_time = time_functions.local_sidereal_to_greenwich_sidereal_time(utils.decimal_to_time(rise_lst), long)
   rise_full_date = at.FullDate((greenwich_date, rise_greenwich_sidereal_time))
-
   set_greenwich_sidereal_time = time_functions.local_sidereal_to_greenwich_sidereal_time(utils.decimal_to_time(set_lst), long)
   set_full_date = at.FullDate((greenwich_date, set_greenwich_sidereal_time))
 
   _, (r_h, r_m, r_s) = time_functions.greenwich_sidereal_to_universal_time(rise_full_date)
   _, (s_h, s_m, s_s) = time_functions.greenwich_sidereal_to_universal_time(set_full_date)
-
   rise_time_adjusted = at.Time((r_h, r_m, r_s + 0.008333))
   set_time_adjusted = at.Time((s_h, s_m, s_s + 0.008333))
 
