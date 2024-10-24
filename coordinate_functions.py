@@ -85,7 +85,7 @@ def horizon_to_equatorial_coordinates(horizontal_coordinates: at.HorizontalCoord
   altitude, azimuth = horizontal_coordinates
 
   if isinstance(latitude, tuple):
-        latitude = degrees_to_decimal_degrees(latitude)
+    latitude = degrees_to_decimal_degrees(latitude)
 
   azimuth_decimal = degrees_to_decimal_degrees(azimuth)
   altitude_decimal = degrees_to_decimal_degrees(altitude)
@@ -123,13 +123,12 @@ def ecliptic_to_equatorial_coordinates(ecliptic_coordinates: at.EclipticCoordina
   eclat, eclon = ecliptic_coordinates
 
   if isinstance(eclat, tuple):
-    eclat_decimal = degrees_to_decimal_degrees(eclat)
-  else:
-    eclat_decimal = eclat
+    eclat = degrees_to_decimal_degrees(eclat)
   if isinstance(eclon, tuple):
-    eclon_decimal = degrees_to_decimal_degrees(eclon)
-  else:
-    eclon_decimal = eclon
+    eclon = degrees_to_decimal_degrees(eclon)
+
+  eclat_decimal = eclat
+  eclon_decimal = eclon
 
   eclon_rad = math.radians(eclon_decimal)
   eclat_rad = math.radians(eclat_decimal)
@@ -202,13 +201,12 @@ def galactic_to_equatorial_coordinates(galactic_coordinates: at.GalacticCoordina
   lat, lon = galactic_coordinates
 
   if isinstance(lat, tuple):
-    lat_dec = degrees_to_decimal_degrees(lat)
-  else:
-    lat_dec = lat
+    lat = degrees_to_decimal_degrees(lat)
   if isinstance(lon, tuple):
-    lon_dec = degrees_to_decimal_degrees(lon)
-  else:
-    lon_dec = lon
+    lon = degrees_to_decimal_degrees(lon)
+  
+  lat_dec = lat
+  lon_dec = lon
 
   lat_rad = math.radians(lat_dec)
   lon_rad = math.radians(lon_dec)
@@ -253,15 +251,15 @@ def rising_and_setting(target_coordinates: at.EquatorialCoordinates, observer_co
   decimal_right_ascension = degrees_to_decimal_degrees(at.Degrees(ra))
   radians_declination = math.radians(degrees_to_decimal_degrees(dec))
   radians_vertical_shift = math.radians(vertical_shift)
-
   lat, long = observer_coordinates
+
   if isinstance(lat, tuple):
     lat = degrees_to_decimal_degrees(lat)
+    
   radians_geographic_latitude = math.radians(lat)
 
   cosine_ha = -(math.sin(radians_vertical_shift) + math.sin(radians_geographic_latitude) * math.sin(radians_declination)) / (math.cos(radians_geographic_latitude) * math.cos(radians_declination))
   hours_h = hours_to_degrees(math.degrees(math.acos(cosine_ha)))
-
   rise_lst = (decimal_right_ascension - hours_h) - 24 * int(((decimal_right_ascension - hours_h))/ 24)
   set_lst = (decimal_right_ascension + hours_h) - 24 * int(((decimal_right_ascension + hours_h))/ 24)
 
@@ -273,7 +271,6 @@ def rising_and_setting(target_coordinates: at.EquatorialCoordinates, observer_co
   rise_full_date = at.FullDate((greenwich_date, rise_greenwich_sidereal_time))
   set_greenwich_sidereal_time = time_functions.local_sidereal_to_greenwich_sidereal_time(utils.decimal_to_time(set_lst), long)
   set_full_date = at.FullDate((greenwich_date, set_greenwich_sidereal_time))
-
   _, (r_h, r_m, r_s) = time_functions.greenwich_sidereal_to_universal_time(rise_full_date)
   _, (s_h, s_m, s_s) = time_functions.greenwich_sidereal_to_universal_time(set_full_date)
   rise_time_adjusted = at.Time((r_h, r_m, r_s + 0.008333))
