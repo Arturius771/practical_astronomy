@@ -1,62 +1,62 @@
 import math
 import time_functions
 import utils
-import astronomy_types
+import astronomy_types as at
 
 
-def degrees_to_decimal_degrees(degrees: astronomy_types.Degrees) -> astronomy_types.DecimalDegrees:
+def degrees_to_decimal_degrees(degrees: at.Degrees) -> at.DecimalDegrees:
   angle, minutes, seconds = degrees
-  unsigned_degrees = utils.time_to_decimal(astronomy_types.Time((abs(angle), abs(minutes), abs(seconds))))
+  unsigned_degrees = utils.time_to_decimal(at.Time((abs(angle), abs(minutes), abs(seconds))))
   decimal_degrees = -unsigned_degrees if angle < 0 or minutes < 0 or seconds < 0 else unsigned_degrees 
 
   return decimal_degrees
 
-def decimal_degrees_to_degrees(decimal_degree: astronomy_types.DecimalDegrees) -> astronomy_types.Degrees:
+def decimal_degrees_to_degrees(decimal_degree: at.DecimalDegrees) -> at.Degrees:
     unsigned_degrees, minutes, seconds = utils.decimal_to_time(decimal_degree)
     signed_degrees = -1 * unsigned_degrees if decimal_degree < 0 else unsigned_degrees
   
-    return astronomy_types.Degrees((signed_degrees, minutes, seconds))
+    return at.Degrees((signed_degrees, minutes, seconds))
 
-def hours_to_degrees(degrees: astronomy_types.DecimalDegrees) -> astronomy_types.DecimalDegrees:
+def hours_to_degrees(degrees: at.DecimalDegrees) -> at.DecimalDegrees:
   return degrees / 15
 
-def degrees_to_hours(degrees: astronomy_types.DecimalDegrees) -> astronomy_types.DecimalDegrees:
+def degrees_to_hours(degrees: at.DecimalDegrees) -> at.DecimalDegrees:
   return degrees * 15
   
-def right_ascension_to_hour_angle(right_ascension: astronomy_types.RightAscension, local_date_and_time: astronomy_types.FullDate, daylight_savings: int, zone_correction: int, longitude: astronomy_types.Longitude) -> astronomy_types.HourAngle:
+def right_ascension_to_hour_angle(right_ascension: at.RightAscension, local_date_and_time: at.FullDate, daylight_savings: int, zone_correction: int, longitude: at.Longitude) -> at.HourAngle:
   """H = LST - a"""
   utc = time_functions.local_civil_to_universal_time(local_date_and_time, daylight_savings, zone_correction)
   gst = time_functions.universal_to_greenwich_sidereal_time(utc)
   local_sidereal_time = time_functions.greenwich_sidereal_to_local_sidereal_time(gst, longitude)
   lst_dec = utils.time_to_decimal(local_sidereal_time)
-  ra_decimal = degrees_to_decimal_degrees(astronomy_types.Degrees(right_ascension))
+  ra_decimal = degrees_to_decimal_degrees(at.Degrees(right_ascension))
   hour_angle = lst_dec - ra_decimal
 
   if hour_angle < 0:
     hour_angle += 24
   
-  return astronomy_types.HourAngle(astronomy_types.Time(decimal_degrees_to_degrees(hour_angle)))
+  return at.HourAngle(at.Time(decimal_degrees_to_degrees(hour_angle)))
 
-def hour_angle_to_right_ascension(hour_angle: astronomy_types.HourAngle, full_date: astronomy_types.FullDate, daylight_savings: int, zone_correction: int, longitude: astronomy_types.Longitude) -> astronomy_types.RightAscension:
+def hour_angle_to_right_ascension(hour_angle: at.HourAngle, full_date: at.FullDate, daylight_savings: int, zone_correction: int, longitude: at.Longitude) -> at.RightAscension:
   utc = time_functions.local_civil_to_universal_time(full_date,daylight_savings,zone_correction)
   gst = time_functions.universal_to_greenwich_sidereal_time(utc)
   lst = time_functions.greenwich_sidereal_to_local_sidereal_time(gst, longitude)
-  lst_dec = degrees_to_decimal_degrees(astronomy_types.Degrees(lst))
-  ha_decimal = degrees_to_decimal_degrees(astronomy_types.Degrees(hour_angle))
+  lst_dec = degrees_to_decimal_degrees(at.Degrees(lst))
+  ha_decimal = degrees_to_decimal_degrees(at.Degrees(hour_angle))
   right_ascension = lst_dec - ha_decimal
 
   if right_ascension < 0:
     right_ascension += 24
 
-  return astronomy_types.Time(decimal_degrees_to_degrees(right_ascension))
+  return at.RightAscension(at.Time(decimal_degrees_to_degrees(right_ascension)))
 
-def equatorial_to_horizon_coordinates(equatorial_coordinates: astronomy_types.EquatorialCoordinatesHourAngle, latitude: astronomy_types.Latitude) -> astronomy_types.HorizontalCoordinates:
+def equatorial_to_horizon_coordinates(equatorial_coordinates: at.EquatorialCoordinatesHourAngle, latitude: at.Latitude) -> at.HorizontalCoordinates:
   declination, hour_angle = equatorial_coordinates
 
   if isinstance(latitude, tuple):
         latitude = degrees_to_decimal_degrees(latitude)
 
-  ha_decimal = degrees_to_decimal_degrees(astronomy_types.Degrees(hour_angle))
+  ha_decimal = degrees_to_decimal_degrees(at.Degrees(hour_angle))
   ha_degrees =  degrees_to_hours(ha_decimal)
   ha_radians = math.radians(ha_degrees)
   declination_decimal = degrees_to_decimal_degrees(declination)
@@ -76,12 +76,12 @@ def equatorial_to_horizon_coordinates(equatorial_coordinates: astronomy_types.Eq
   if azimuth_degrees < 0:
     azimuth_degrees += 360 # TODO: b - (360 * math.floor(b/360))
 
-  altitude = astronomy_types.Altitude(decimal_degrees_to_degrees(altitude_degrees))
-  azimuth = astronomy_types.Azimuth(decimal_degrees_to_degrees(azimuth_degrees))
+  altitude = at.Altitude(decimal_degrees_to_degrees(altitude_degrees))
+  azimuth = at.Azimuth(decimal_degrees_to_degrees(azimuth_degrees))
 
-  return astronomy_types.HorizontalCoordinates((altitude, azimuth))
+  return at.HorizontalCoordinates((altitude, azimuth))
 
-def horizon_to_equatorial_coordinates(horizontal_coordinates: astronomy_types.HorizontalCoordinates, latitude: astronomy_types.Latitude) -> astronomy_types.EquatorialCoordinatesHourAngle:
+def horizon_to_equatorial_coordinates(horizontal_coordinates: at.HorizontalCoordinates, latitude: at.Latitude) -> at.EquatorialCoordinatesHourAngle:
   altitude, azimuth = horizontal_coordinates
 
   if isinstance(latitude, tuple):
@@ -97,7 +97,7 @@ def horizon_to_equatorial_coordinates(horizontal_coordinates: astronomy_types.Ho
 
   declination_radians = math.asin(declination_sin)
   declination_degrees_decimal = math.degrees(declination_radians)
-  declination = astronomy_types.Declination(decimal_degrees_to_degrees(declination_degrees_decimal))
+  declination = at.Declination(decimal_degrees_to_degrees(declination_degrees_decimal))
 
   y = -math.cos(altitude_radians) * math.cos(latitude_radians) * math.sin(azimuth_radians)
   x = math.sin(altitude_radians) - math.sin(latitude_radians) * declination_sin
@@ -106,11 +106,11 @@ def horizon_to_equatorial_coordinates(horizontal_coordinates: astronomy_types.Ho
   ha_hours = b - (360 * math.floor(b/360))
   ha = hours_to_degrees(ha_hours)
 
-  hour_angle = astronomy_types.HourAngle(astronomy_types.Time(decimal_degrees_to_degrees(ha)))
+  hour_angle = at.HourAngle(at.Time(decimal_degrees_to_degrees(ha)))
 
-  return astronomy_types.EquatorialCoordinatesHourAngle((declination, hour_angle))
+  return at.EquatorialCoordinatesHourAngle((declination, hour_angle))
 
-def mean_obliquity_ecliptic(greenwich_date: astronomy_types.Date) -> astronomy_types.Obliquity:
+def mean_obliquity_ecliptic(greenwich_date: at.Date) -> at.Obliquity:
   julianDate = time_functions.greenwich_to_julian_date(greenwich_date)
   j2000 = time_functions.julian_date_to_j2000(julianDate)
   t = j2000 / 36525
@@ -119,7 +119,7 @@ def mean_obliquity_ecliptic(greenwich_date: astronomy_types.Date) -> astronomy_t
 
   return obliquity 
 
-def ecliptic_to_equatorial_coordinates(ecliptic_coordinates: astronomy_types.EclipticCoordinates, greenwich_date: astronomy_types.Date) -> astronomy_types.EquatorialCoordinates:
+def ecliptic_to_equatorial_coordinates(ecliptic_coordinates: at.EclipticCoordinates, greenwich_date: at.Date) -> at.EquatorialCoordinates:
   eclat, eclon = ecliptic_coordinates
 
   if isinstance(eclat, tuple):
@@ -138,7 +138,7 @@ def ecliptic_to_equatorial_coordinates(ecliptic_coordinates: astronomy_types.Ecl
   declination_sin = math.sin(eclat_rad) * math.cos(obliquity_rad) + math.cos(eclat_rad) * math.sin(obliquity_rad) * math.sin(eclon_rad)
   declination_rad = math.asin(declination_sin)
   declination_degrees_decimal = math.degrees(declination_rad)
-  declination_deg = astronomy_types.Declination(decimal_degrees_to_degrees(declination_degrees_decimal))
+  declination_deg = at.Declination(decimal_degrees_to_degrees(declination_degrees_decimal))
 
   y = math.sin(eclon_rad) * math.cos(obliquity_rad) - math.tan(eclat_rad) * math.sin(obliquity_rad)
   x = math.cos(eclon_rad)
@@ -147,14 +147,14 @@ def ecliptic_to_equatorial_coordinates(ecliptic_coordinates: astronomy_types.Ecl
   right_ascension_deg_corrected = right_ascension_deg - 360 * math.floor(right_ascension_deg/360)
   right_ascension_degrees =  hours_to_degrees(right_ascension_deg_corrected)
 
-  right_ascension = astronomy_types.Time(decimal_degrees_to_degrees(right_ascension_degrees))
+  right_ascension = at.RightAscension(at.Time(decimal_degrees_to_degrees(right_ascension_degrees)))
 
-  return astronomy_types.EquatorialCoordinates((declination_deg, right_ascension))
+  return at.EquatorialCoordinates((declination_deg, right_ascension))
 
-def equatorial_to_ecliptic_coordinates(equatorial_coordinates: astronomy_types.EquatorialCoordinates, greenwich_date: astronomy_types.Date) -> astronomy_types.EclipticCoordinates:
+def equatorial_to_ecliptic_coordinates(equatorial_coordinates: at.EquatorialCoordinates, greenwich_date: at.Date) -> at.EclipticCoordinates:
   declination, right_ascension = equatorial_coordinates
 
-  right_ascension_degrees = degrees_to_hours(degrees_to_decimal_degrees(astronomy_types.Degrees(right_ascension))) 
+  right_ascension_degrees = degrees_to_hours(degrees_to_decimal_degrees(at.Degrees(right_ascension))) 
   declination_deg = degrees_to_decimal_degrees(declination)
   right_ascension_rad = math.radians(right_ascension_degrees)
   declination_rad = math.radians(declination_deg)
@@ -175,13 +175,13 @@ def equatorial_to_ecliptic_coordinates(equatorial_coordinates: astronomy_types.E
   latitude = decimal_degrees_to_degrees(ecliptic_lat_deg)
   longitude = decimal_degrees_to_degrees(ecliptic_long_deg_corrected)
 
-  return astronomy_types.EclipticCoordinates((latitude, longitude))
+  return at.EclipticCoordinates((latitude, longitude))
 
-def equatorial_to_galactic_coordinates(equatorial_coordinates: astronomy_types.EquatorialCoordinates) -> astronomy_types.GalacticCoordinates:
+def equatorial_to_galactic_coordinates(equatorial_coordinates: at.EquatorialCoordinates) -> at.GalacticCoordinates:
   dec, ra = equatorial_coordinates
 
   dec_decimal = degrees_to_decimal_degrees(dec)
-  ra_decimal = degrees_to_hours(degrees_to_decimal_degrees(astronomy_types.Degrees(ra)))
+  ra_decimal = degrees_to_hours(degrees_to_decimal_degrees(at.Degrees(ra)))
   dec_rad = math.radians(dec_decimal)
   ra_rad = math.radians(ra_decimal)
   b = math.cos(dec_rad) * math.cos(math.radians(27.4)) * math.cos(ra_rad - math.radians(192.25)) + math.sin(dec_rad) * math.sin(math.radians(27.4))
@@ -196,9 +196,9 @@ def equatorial_to_galactic_coordinates(equatorial_coordinates: astronomy_types.E
   latitude = decimal_degrees_to_degrees(b_deg)
   longitude = decimal_degrees_to_degrees(longitude_corrected)
 
-  return astronomy_types.GalacticCoordinates((latitude, longitude))
+  return at.GalacticCoordinates((latitude, longitude))
 
-def galactic_to_equatorial_coordinates(galactic_coordinates: astronomy_types.GalacticCoordinates) -> astronomy_types.EquatorialCoordinates:
+def galactic_to_equatorial_coordinates(galactic_coordinates: at.GalacticCoordinates) -> at.EquatorialCoordinates:
   lat, lon = galactic_coordinates
 
   if isinstance(lat, tuple):
@@ -216,21 +216,38 @@ def galactic_to_equatorial_coordinates(galactic_coordinates: astronomy_types.Gal
   sin_dec = math.cos(lat_rad) * math.cos(math.radians(27.4)) * math.sin(lon_rad - math.radians(33)) + math.sin(lat_rad) * math.sin(math.radians(27.4))
   declination = math.asin(sin_dec)
   declination_degrees_decimal = math.degrees(declination)
-  declination_degrees = astronomy_types.Declination(decimal_degrees_to_degrees(declination_degrees_decimal))
+  declination_degrees = at.Declination(decimal_degrees_to_degrees(declination_degrees_decimal))
 
   y = math.cos(lat_rad) * math.cos(lon_rad - math.radians(33))
   x = math.sin(lat_rad) * math.cos(math.radians(27.4)) - math.cos(lat_rad) * math.sin(math.radians(27.4)) * math.sin(lon_rad - math.radians(33))
   right_ascension = math.degrees(math.atan2(y,x)) + 192.25
   right_ascension_corrected = right_ascension - 360 * math.floor(right_ascension/360)
   right_ascension_hours = decimal_degrees_to_degrees(hours_to_degrees(right_ascension_corrected))
-  right_ascension = astronomy_types.Time(right_ascension_hours)
+  right_ascension = at.RightAscension(at.Time(right_ascension_hours))
 
-  return astronomy_types.EquatorialCoordinates((declination_degrees, right_ascension))
+  return at.EquatorialCoordinates((declination_degrees, right_ascension))
 
+def angle_difference(object1_coordinates: at.EquatorialCoordinates, object2_coordinates: at.EquatorialCoordinates) -> at.Degrees:
+  declination1, right_ascension1 = object1_coordinates
+  decimal_declination1 = degrees_to_decimal_degrees(declination1)
+  decimal_right_ascension1 = degrees_to_hours(degrees_to_decimal_degrees(at.Degrees(right_ascension1)))
+  radians_declination1 = math.radians(decimal_declination1)
+  radians_right_ascension1 = math.radians(decimal_right_ascension1)
+  
+  declination2, right_ascension2 = object2_coordinates
+  decimal_declination2 = degrees_to_decimal_degrees(declination2)
+  decimal_right_ascension2 = degrees_to_hours(degrees_to_decimal_degrees(at.Degrees(right_ascension2)))
+  radians_declination2 = math.radians(decimal_declination2)
+  radians_right_ascension2 = math.radians(decimal_right_ascension2)
+  
+  difference = radians_right_ascension1 - radians_right_ascension2
+  cos_d = math.sin(radians_declination1) * math.sin(radians_declination2) + math.cos(radians_declination1) * math.cos(radians_declination2) * math.cos(difference)
+  
+  rad_d = math.acos(cos_d)
+  deg_d = math.degrees(rad_d)
+
+  return decimal_degrees_to_degrees(deg_d)
 
 # if __name__ == '__main__':
-#     ra = astronomy_types.Time((18,37,47.5))
-#     ha = right_ascension_to_hour_angle(ra,astronomy_types.FullDate((astronomy_types.Date((2024,8,7)),astronomy_types.Time((22,10,00)))),1,1,11.40911)
-#     al, az = equatorial_to_horizon_coordinates(astronomy_types.EquatorialCoordinatesHourAngle((astronomy_types.Declination(astronomy_types.Degrees((38,48,30.6))), ha)), 48.13979 )
       
-#     print(al, az)
+#     print(angle_difference())

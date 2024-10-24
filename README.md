@@ -42,9 +42,8 @@ Clone this repo using git.
 
 Currently, you will have to manually import these functions into your project if you wish.
 
-You can run the tests in your terminal: `python3 {filename}` eg. `python3 time_functions.test.py`
-
 # Future plans
 
 - Finish implementing all of the algorithms from the book.
+  - Note: skipped section 31, matrix method for coordinate conversions. Will implement later.
 - Add a test runner.
