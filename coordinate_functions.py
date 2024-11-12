@@ -312,8 +312,8 @@ def nutation_from_date(greenwich_date: Date) -> tuple:
 
   return (nutation_longtitude, nutation_obliquity)
 
-if __name__ == '__main__':
+# if __name__ == '__main__':
     
-    date1 = 2433282.423
+#     date1 = 2433282.423
 
-    print(nutation_from_date(Date((1988,9,1))))
+#     print(nutation_from_date(Date((1988,9,1))))
