@@ -104,3 +104,8 @@ class CoordinateTestMethods(unittest.TestCase):
     new_epoch = 2444025.5
 
     self.assertEqual(coordinate_functions.precession_low_precision(coordinates, original_epoch, new_epoch), ((14, 16, 9.12), (9, 12, 20.18)), msg)
+
+  def test_nutation_from_date(self): 
+    msg = "test_nutation_from_date fail"
+
+    self.assertEqual(coordinate_functions.nutation_from_date(Date((1988,9,1))), (0.0015258083552917808, 0.0025671004471993584), msg)

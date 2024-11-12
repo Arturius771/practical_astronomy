@@ -115,12 +115,12 @@ def finding_day_of_week(julianDate: JulianDate) -> DaysOfWeek:
   return days[dayNumber]
 
 def hours_minutes_seconds_to_decimal_time(time: Time, twenty_four_hour_clock = True) -> DecimalTime:
-  c = utils.time_to_decimal(time)
+  c = utils.time_to_decimal_time(time)
 
   return c if twenty_four_hour_clock or c <= 12 else c - 12
 
 def decimal_hours_to_hours_minutes_seconds(decimalTime: DecimalTime) -> Time:
-  hours, minutes, seconds = utils.decimal_to_time(decimalTime)
+  hours, minutes, seconds = utils.decimal_time_to_time(decimalTime)
   hours = hours * -1 if decimalTime < 0 else hours
 
   return Time((hours, minutes, seconds))

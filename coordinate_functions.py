@@ -6,13 +6,13 @@ from astronomy_types import Date, DecimalTime, Time, FullDate, Longitude, Degree
 
 def degrees_to_decimal_degrees(degrees: Degrees) -> DecimalDegrees:
   angle, minutes, seconds = degrees
-  unsigned_degrees = utils.time_to_decimal(Time((abs(angle), abs(minutes), abs(seconds))))
+  unsigned_degrees = utils.time_to_decimal_time(Time((abs(angle), abs(minutes), abs(seconds))))
   decimal_degrees = -unsigned_degrees if angle < 0 or minutes < 0 or seconds < 0 else unsigned_degrees 
 
   return decimal_degrees
 
 def decimal_degrees_to_degrees(decimal_degree: DecimalDegrees) -> Degrees:
-    hour, minutes, seconds = utils.decimal_to_time(decimal_degree)
+    hour, minutes, seconds = utils.decimal_time_to_time(decimal_degree)
     signed_degrees = -1 * hour if decimal_degree < 0 else hour
   
     return Degrees((signed_degrees, minutes, seconds))
@@ -28,7 +28,7 @@ def right_ascension_to_hour_angle(right_ascension: RightAscension, local_date_an
   utc = time_functions.local_civil_to_universal_time(local_date_and_time, daylight_savings, zone_correction)
   gst = time_functions.universal_to_greenwich_sidereal_time(utc)
   local_sidereal_time = time_functions.greenwich_sidereal_to_local_sidereal_time(gst, longitude)
-  lst_dec = utils.time_to_decimal(local_sidereal_time)
+  lst_dec = utils.time_to_decimal_time(local_sidereal_time)
   ra_decimal = degrees_to_decimal_degrees(Degrees(right_ascension))
   hour_angle = lst_dec - ra_decimal
 
@@ -267,39 +267,18 @@ def rising_and_setting(target_coordinates: EquatorialCoordinates, observer_coord
   rise_az = a - 360 * int(a / 360)
   set_az = (360 - a) - 360 * int((360 - a)/ 360)
 
-  rise_greenwich_sidereal_time = time_functions.local_sidereal_to_greenwich_sidereal_time(utils.decimal_to_time(rise_lst), long)
+  rise_greenwich_sidereal_time = time_functions.local_sidereal_to_greenwich_sidereal_time(utils.decimal_time_to_time(rise_lst), long)
   rise_full_date = FullDate((greenwich_date, rise_greenwich_sidereal_time))
-  set_greenwich_sidereal_time = time_functions.local_sidereal_to_greenwich_sidereal_time(utils.decimal_to_time(set_lst), long)
+  set_greenwich_sidereal_time = time_functions.local_sidereal_to_greenwich_sidereal_time(utils.decimal_time_to_time(set_lst), long)
   set_full_date = FullDate((greenwich_date, set_greenwich_sidereal_time))
   _, (r_h, r_m, r_s) = time_functions.greenwich_sidereal_to_universal_time(rise_full_date)
   _, (s_h, s_m, s_s) = time_functions.greenwich_sidereal_to_universal_time(set_full_date)
   rise_time_adjusted = Time((r_h, r_m, r_s + 0.008333))
   set_time_adjusted = Time((s_h, s_m, s_s + 0.008333))
 
-  # TODO: needs a type perhaps, but better documentation for the return type in this function at least
   circumpolar = True if cosine_ha < 1 else False
 
   return (circumpolar, rise_time_adjusted, set_time_adjusted, rise_az, set_az)
-
-
-# def precession_low_precision(equatorial_coordinates: EquatorialCoordinates, epoch1: Date, epoch2: Date) -> EquatorialCoordinates:
-#   dec1, ra1 = equatorial_coordinates
-#   dec1_rad = math.radians(degrees_to_decimal_degrees(dec1))
-#   ra1_rad = math.radians(degrees_to_hours(degrees_to_decimal_degrees(Degrees(ra1))))
-#   epoch1_julian = time_functions.greenwich_to_julian_date(epoch1)
-#   epoch2_julian = time_functions.greenwich_to_julian_date(epoch2)
-#   t_centuries = time_functions.julian_date_to_epoch(epoch1_julian, -2415020) / 36525
-#   m = 3.07234 + (0.00186 * t_centuries)
-#   n = 20.0468 - (0.0085 * t_centuries)
-#   n_years = time_functions.julian_date_to_epoch(epoch2_julian, -epoch1_julian)  / 365.25
-#   s1 = ((m + (n * math.sin(ra1_rad) * math.tan(dec1_rad) / 15)) * n_years) / 3600
-#   ra2 = degrees_to_decimal_degrees(Degrees(ra1)) + s1
-#   s2 = (n * math.cos(ra1_rad) * n_years) / 3600
-#   dec2 = degrees_to_decimal_degrees(dec1) + s2
-
-#   print(epoch1_julian, epoch2_julian)
-
-#   return EquatorialCoordinates((Declination(decimal_degrees_to_degrees(dec2)), RightAscension(Time(decimal_degrees_to_degrees(ra2)))))
 
 def precession_low_precision(equatorial_coordinates: EquatorialCoordinates, original_epoch: Epoch, new_epoch: Epoch) -> EquatorialCoordinates:
   dec1, ra1 = equatorial_coordinates
@@ -316,11 +295,25 @@ def precession_low_precision(equatorial_coordinates: EquatorialCoordinates, orig
 
   return EquatorialCoordinates((Declination(decimal_degrees_to_degrees(dec2)), RightAscension(Time(decimal_degrees_to_degrees(ra2)))))
 
+def nutation_from_date(greenwich_date: Date) -> tuple:
+  jd = time_functions.greenwich_to_julian_date(greenwich_date)
+  t_centuries = time_functions.julian_date_to_epoch(jd, -2415020) / 36525
+  a = 100.0021358 * t_centuries
+  l1 = 279.6967 + (0.000303 * t_centuries**2)
+  l2 = l1 + 360 * (a - math.floor(a))
+  l3 = l2 - 360 * math.floor(l2 / 360)
+  l4 = math.radians(l3)
+  b = 5.372617 * t_centuries
+  n1 = 259.1833 - 360 * (b - math.floor(b))
+  n2 = n1 - 360 * (math.floor(n1 / 360))
+  n3 = math.radians(n2)
+  nutation_longtitude = (-17.2 * math.sin(n3) - 1.3 * math.sin(2 * l4)) / 3600
+  nutation_obliquity = (9.2 * math.cos(n3) + 0.5 * math.cos(2 * l4)) / 3600
+
+  return (nutation_longtitude, nutation_obliquity)
 
 if __name__ == '__main__':
     
-    coordinates = EquatorialCoordinates((Declination(Degrees((14,23,25))), RightAscension(Time((9,10,43))))) 
     date1 = 2433282.423
-    date2 = 2444025.5
 
-    print(precession_low_precision(coordinates, date1, date2))
+    print(nutation_from_date(Date((1988,9,1))))
