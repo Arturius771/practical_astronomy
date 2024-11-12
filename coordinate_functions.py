@@ -1,7 +1,7 @@
 import math
 import time_functions
 import utils
-from astronomy_types import Date, DecimalTime, Time, FullDate, Longitude, Degrees, DecimalDegrees, RightAscension, HourAngle, EquatorialCoordinates, EquatorialCoordinatesHourAngle, HorizontalCoordinates, Latitude, Altitude, Azimuth, EclipticCoordinates, Declination, Obliquity, GalacticCoordinates, GeographicCoordinates
+from astronomy_types import Date, DecimalTime, Time, FullDate, Longitude, Degrees, DecimalDegrees, RightAscension, HourAngle, EquatorialCoordinates, EquatorialCoordinatesHourAngle, HorizontalCoordinates, Latitude, Altitude, Azimuth, EclipticCoordinates, Declination, Obliquity, GalacticCoordinates, GeographicCoordinates, Epoch
 
 
 def degrees_to_decimal_degrees(degrees: Degrees) -> DecimalDegrees:
@@ -12,8 +12,8 @@ def degrees_to_decimal_degrees(degrees: Degrees) -> DecimalDegrees:
   return decimal_degrees
 
 def decimal_degrees_to_degrees(decimal_degree: DecimalDegrees) -> Degrees:
-    unsigned_degrees, minutes, seconds = utils.decimal_to_time(decimal_degree)
-    signed_degrees = -1 * unsigned_degrees if decimal_degree < 0 else unsigned_degrees
+    hour, minutes, seconds = utils.decimal_to_time(decimal_degree)
+    signed_degrees = -1 * hour if decimal_degree < 0 else hour
   
     return Degrees((signed_degrees, minutes, seconds))
 
@@ -282,12 +282,45 @@ def rising_and_setting(target_coordinates: EquatorialCoordinates, observer_coord
   return (circumpolar, rise_time_adjusted, set_time_adjusted, rise_az, set_az)
 
 
+# def precession_low_precision(equatorial_coordinates: EquatorialCoordinates, epoch1: Date, epoch2: Date) -> EquatorialCoordinates:
+#   dec1, ra1 = equatorial_coordinates
+#   dec1_rad = math.radians(degrees_to_decimal_degrees(dec1))
+#   ra1_rad = math.radians(degrees_to_hours(degrees_to_decimal_degrees(Degrees(ra1))))
+#   epoch1_julian = time_functions.greenwich_to_julian_date(epoch1)
+#   epoch2_julian = time_functions.greenwich_to_julian_date(epoch2)
+#   t_centuries = time_functions.julian_date_to_epoch(epoch1_julian, -2415020) / 36525
+#   m = 3.07234 + (0.00186 * t_centuries)
+#   n = 20.0468 - (0.0085 * t_centuries)
+#   n_years = time_functions.julian_date_to_epoch(epoch2_julian, -epoch1_julian)  / 365.25
+#   s1 = ((m + (n * math.sin(ra1_rad) * math.tan(dec1_rad) / 15)) * n_years) / 3600
+#   ra2 = degrees_to_decimal_degrees(Degrees(ra1)) + s1
+#   s2 = (n * math.cos(ra1_rad) * n_years) / 3600
+#   dec2 = degrees_to_decimal_degrees(dec1) + s2
+
+#   print(epoch1_julian, epoch2_julian)
+
+#   return EquatorialCoordinates((Declination(decimal_degrees_to_degrees(dec2)), RightAscension(Time(decimal_degrees_to_degrees(ra2)))))
+
+def precession_low_precision(equatorial_coordinates: EquatorialCoordinates, original_epoch: Epoch, new_epoch: Epoch) -> EquatorialCoordinates:
+  dec1, ra1 = equatorial_coordinates
+  dec1_rad = math.radians(degrees_to_decimal_degrees(dec1))
+  ra1_rad = math.radians(degrees_to_hours(degrees_to_decimal_degrees(Degrees(ra1))))
+  t_centuries = time_functions.julian_date_to_epoch(original_epoch, -2415020.5) / 36525
+  m = 3.07234 + (0.00186 * t_centuries)
+  n = 20.0468 - (0.0085 * t_centuries)
+  n_years = time_functions.julian_date_to_epoch(new_epoch, -original_epoch)  / 365.25
+  s1 = ((m + (n * math.sin(ra1_rad) * math.tan(dec1_rad) / 15)) * n_years) / 3600
+  ra2 = degrees_to_decimal_degrees(Degrees(ra1)) + s1
+  s2 = (n * math.cos(ra1_rad) * n_years) / 3600
+  dec2 = degrees_to_decimal_degrees(dec1) + s2
+
+  return EquatorialCoordinates((Declination(decimal_degrees_to_degrees(dec2)), RightAscension(Time(decimal_degrees_to_degrees(ra2)))))
 
 
-# if __name__ == '__main__':
+if __name__ == '__main__':
     
-#     coordinates = EquatorialCoordinates((Declination(Degrees((21,42,0))), RightAscension(Time((23,39,20))))) 
-#     location = GeographicCoordinates((30, 64))
-#     greenwich_date = Date((2010, 8, 24))
-      
-#     print(rising_and_setting(coordinates, location, greenwich_date, 0.5667))
+    coordinates = EquatorialCoordinates((Declination(Degrees((14,23,25))), RightAscension(Time((9,10,43))))) 
+    date1 = 2433282.423
+    date2 = 2444025.5
+
+    print(precession_low_precision(coordinates, date1, date2))

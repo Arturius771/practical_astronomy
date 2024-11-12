@@ -101,7 +101,10 @@ def julian_to_greenwich_date(julianDate: JulianDate) -> Date:
   return Date((year, month, day))
 
 def julian_date_to_j2000(julianDate: JulianDate) -> Epoch:
-  return julianDate - 2451545.0
+  return julian_date_to_epoch(julianDate, -2451545.0)
+
+def julian_date_to_epoch(julianDate: JulianDate, adjustment: float) -> Epoch:
+  return julianDate + adjustment
 
 def finding_day_of_week(julianDate: JulianDate) -> DaysOfWeek:
   julianDay = (julianDate + 1.5) % 7
