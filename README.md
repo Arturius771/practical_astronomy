@@ -36,7 +36,9 @@ pip install --upgrade -r requirements.txt
 
 # Installation
 
-Clone this repo using git.
+```bash
+pip install af_practical_astronomy
+```
 
 # Running
 
@@ -47,3 +49,59 @@ Currently, you will have to manually import these functions into your project if
 - Finish implementing all of the algorithms from the book.
   - Note: skipped section 31, matrix method for coordinate conversions. Will implement later.
 - Add a test runner.
+
+# Updating and Repackaging the Project with `setuptools`
+
+To update and repackage this Python project using `setuptools` on macOS, follow these steps:
+
+## 1. Install or Activate the Virtual Environment
+
+It's recommended to use a virtual environment for isolation. If you don't already have a virtual environment, create and activate one:
+
+### Create and start virtual environment:
+
+```bash
+python3 -m venv venv
+```
+
+```bash
+source venv/bin/activate
+```
+
+## 2. Install Required Dependencies
+
+Ensure that setuptools and wheel are installed in your environment:
+
+```bash
+pip install setuptools wheel twine
+```
+
+or
+
+```bash
+pip install -r requirements.txt
+```
+
+## 3. Update version number
+
+```bash
+setup(
+    name="astronomy_types",
+    version="0.2.0",  # Update this to the new version number
+    ...
+)
+```
+
+## 4. Build the dist
+
+```bash
+python3 setup.py sdist bdist_wheel
+```
+
+## 5. Upload with `twine`
+
+```bash
+twine upload dist/*
+```
+
+And enter in the API token when prompted
