@@ -1,5 +1,5 @@
 import unittest
-import lib.coordinate_functions as coordinate_functions
+import coordinate_functions
 from astronomy_types import FullDate, Date, Time, HorizontalCoordinates, Degrees, EquatorialCoordinates, HourAngle, RightAscension, EclipticCoordinates, Declination, EquatorialCoordinatesHourAngle, Altitude, Azimuth, GeographicCoordinates, GalacticCoordinates
 
 

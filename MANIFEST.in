@@ -1,6 +1,0 @@
-# Include all Python files in the 'lib' directory
-recursive-include lib *.py
-
-# Include other necessary files, such as README and LICENSE
-include README.md
-include LICENSE
