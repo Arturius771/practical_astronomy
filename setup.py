@@ -1,8 +1,8 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="af_practical_astronomy", 
-    version="1.0.0",
+    name="adsf_practical_astronomy", 
+    version="1.0.2",
     author="Artur Foden",
     description="Astronomically useful functions",
     long_description=open('README.md').read(),
