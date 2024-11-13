@@ -1,6 +1,6 @@
 import math
-import lib.time_functions as time_functions
-import lib.utils as utils
+import time_functions
+import utils
 from astronomy_types import Date, DecimalTime, Time, FullDate, Longitude, Degrees, DecimalDegrees, RightAscension, HourAngle, EquatorialCoordinates, EquatorialCoordinatesHourAngle, HorizontalCoordinates, Latitude, Altitude, Azimuth, EclipticCoordinates, Declination, Obliquity, GalacticCoordinates, GeographicCoordinates, Epoch
 
 

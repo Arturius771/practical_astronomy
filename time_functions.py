@@ -1,6 +1,6 @@
 import math
 from astronomy_types import Year, Date, JulianDate, Epoch, DaysOfWeek, DecimalTime, Time, FullDate, Longitude 
-import lib.utils as utils
+import utils
 
 def date_of_easter(year: Year) -> Date:
   a = year % 19
