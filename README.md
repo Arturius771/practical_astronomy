@@ -73,12 +73,6 @@ source venv/bin/activate
 Ensure that setuptools and wheel are installed in your environment:
 
 ```bash
-pip install setuptools wheel twine
-```
-
-or
-
-```bash
 pip install -r requirements.txt
 ```
 
@@ -86,7 +80,6 @@ pip install -r requirements.txt
 
 ```bash
 setup(
-    name="astronomy_types",
     version="0.2.0",  # Update this to the new version number
     ...
 )
