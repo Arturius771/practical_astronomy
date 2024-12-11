@@ -1,17 +1,19 @@
 import math
-from . import utils, time_functions
+from .utils import *
+from .time_functions import *
+from .sun_functions import sun_longitude
 from astronomy_types import Date, DecimalTime, Time, FullDate, Longitude, Degrees, DecimalDegrees, RightAscension, HourAngle, EquatorialCoordinates, EquatorialCoordinatesHourAngle, HorizontalCoordinates, Latitude, Altitude, Azimuth, EclipticCoordinates, Declination, Obliquity, GalacticCoordinates, GeographicCoordinates, Epoch
 
 
 def degrees_to_decimal_degrees(degrees: Degrees) -> DecimalDegrees:
   angle, minutes, seconds = degrees
-  unsigned_degrees = utils.time_to_decimal_time(Time((abs(angle), abs(minutes), abs(seconds))))
+  unsigned_degrees = time_to_decimal_time(Time((abs(angle), abs(minutes), abs(seconds))))
   decimal_degrees = -unsigned_degrees if angle < 0 or minutes < 0 or seconds < 0 else unsigned_degrees 
 
   return decimal_degrees
 
 def decimal_degrees_to_degrees(decimal_degree: DecimalDegrees) -> Degrees:
-    hour, minutes, seconds = utils.decimal_time_to_time(decimal_degree)
+    hour, minutes, seconds = decimal_time_to_time(decimal_degree)
     signed_degrees = -1 * hour if decimal_degree < 0 else hour
   
     return Degrees((signed_degrees, minutes, seconds))
@@ -24,10 +26,10 @@ def degrees_to_hours(degrees: DecimalDegrees) -> DecimalTime:
   
 def right_ascension_to_hour_angle(right_ascension: RightAscension, local_date_and_time: FullDate, daylight_savings: int, zone_correction: int, longitude: Longitude) -> HourAngle:
   """H = LST - a"""
-  utc = time_functions.local_civil_to_universal_time(local_date_and_time, daylight_savings, zone_correction)
-  gst = time_functions.universal_to_greenwich_sidereal_time(utc)
-  local_sidereal_time = time_functions.greenwich_sidereal_to_local_sidereal_time(gst, longitude)
-  lst_dec = utils.time_to_decimal_time(local_sidereal_time)
+  utc = local_civil_to_universal_time(local_date_and_time, daylight_savings, zone_correction)
+  gst = universal_to_greenwich_sidereal_time(utc)
+  local_sidereal_time = greenwich_sidereal_to_local_sidereal_time(gst, longitude)
+  lst_dec = time_to_decimal_time(local_sidereal_time)
   ra_decimal = degrees_to_decimal_degrees(Degrees(right_ascension))
   hour_angle = lst_dec - ra_decimal
 
@@ -37,9 +39,9 @@ def right_ascension_to_hour_angle(right_ascension: RightAscension, local_date_an
   return HourAngle(Time(decimal_degrees_to_degrees(hour_angle)))
 
 def hour_angle_to_right_ascension(hour_angle: HourAngle, full_date: FullDate, daylight_savings: int, zone_correction: int, longitude: Longitude) -> RightAscension:
-  utc = time_functions.local_civil_to_universal_time(full_date,daylight_savings,zone_correction)
-  gst = time_functions.universal_to_greenwich_sidereal_time(utc)
-  lst = time_functions.greenwich_sidereal_to_local_sidereal_time(gst, longitude)
+  utc = local_civil_to_universal_time(full_date,daylight_savings,zone_correction)
+  gst = universal_to_greenwich_sidereal_time(utc)
+  lst = greenwich_sidereal_to_local_sidereal_time(gst, longitude)
   lst_dec = degrees_to_decimal_degrees(Degrees(lst))
   ha_decimal = degrees_to_decimal_degrees(Degrees(hour_angle))
   right_ascension = lst_dec - ha_decimal
@@ -110,8 +112,8 @@ def horizon_to_equatorial_coordinates(horizontal_coordinates: HorizontalCoordina
   return EquatorialCoordinatesHourAngle((declination, hour_angle))
 
 def mean_obliquity_ecliptic(greenwich_date: Date) -> Obliquity:
-  julianDate = time_functions.greenwich_to_julian_date(greenwich_date)
-  j2000 = time_functions.julian_date_to_j2000(julianDate)
+  julianDate = greenwich_to_julian_date(greenwich_date)
+  j2000 = julian_date_to_j2000(julianDate)
   t = j2000 / 36525
   de = (t * (46.815 + t * (0.0006-(t * 0.00181)))) / 3600
   obliquity = 23.439292 - de
@@ -143,7 +145,7 @@ def ecliptic_to_equatorial_coordinates(ecliptic_coordinates: EclipticCoordinates
   right_ascension_rad = math.atan2(y,x)
   right_ascension_deg = math.degrees(right_ascension_rad)
   right_ascension_deg_corrected = right_ascension_deg - 360 * math.floor(right_ascension_deg/360)
-  right_ascension_degrees =  hours_to_degrees(right_ascension_deg_corrected)
+  right_ascension_degrees = hours_to_degrees(right_ascension_deg_corrected)
 
   right_ascension = RightAscension(Time(decimal_degrees_to_degrees(right_ascension_degrees)))
 
@@ -266,12 +268,12 @@ def rising_and_setting(target_coordinates: EquatorialCoordinates, observer_coord
   rise_az = a - 360 * int(a / 360)
   set_az = (360 - a) - 360 * int((360 - a)/ 360)
 
-  rise_greenwich_sidereal_time = time_functions.local_sidereal_to_greenwich_sidereal_time(utils.decimal_time_to_time(rise_lst), long)
+  rise_greenwich_sidereal_time = local_sidereal_to_greenwich_sidereal_time(decimal_time_to_time(rise_lst), long)
   rise_full_date = FullDate((greenwich_date, rise_greenwich_sidereal_time))
-  set_greenwich_sidereal_time = time_functions.local_sidereal_to_greenwich_sidereal_time(utils.decimal_time_to_time(set_lst), long)
+  set_greenwich_sidereal_time = local_sidereal_to_greenwich_sidereal_time(decimal_time_to_time(set_lst), long)
   set_full_date = FullDate((greenwich_date, set_greenwich_sidereal_time))
-  _, (r_h, r_m, r_s) = time_functions.greenwich_sidereal_to_universal_time(rise_full_date)
-  _, (s_h, s_m, s_s) = time_functions.greenwich_sidereal_to_universal_time(set_full_date)
+  _, (r_h, r_m, r_s) = greenwich_sidereal_to_universal_time(rise_full_date)
+  _, (s_h, s_m, s_s) = greenwich_sidereal_to_universal_time(set_full_date)
   rise_time_adjusted = Time((r_h, r_m, r_s + 0.008333))
   set_time_adjusted = Time((s_h, s_m, s_s + 0.008333))
 
@@ -283,10 +285,10 @@ def precession_low_precision(equatorial_coordinates: EquatorialCoordinates, orig
   dec1, ra1 = equatorial_coordinates
   dec1_rad = math.radians(degrees_to_decimal_degrees(dec1))
   ra1_rad = math.radians(degrees_to_hours(degrees_to_decimal_degrees(Degrees(ra1))))
-  t_centuries = time_functions.julian_date_to_epoch(original_epoch, -2415020.5) / 36525
+  t_centuries = julian_date_to_epoch(original_epoch, -2415020.5) / 36525
   m = 3.07234 + (0.00186 * t_centuries)
   n = 20.0468 - (0.0085 * t_centuries)
-  n_years = time_functions.julian_date_to_epoch(new_epoch, -original_epoch)  / 365.25
+  n_years = julian_date_to_epoch(new_epoch, -original_epoch)  / 365.25
   s1 = ((m + (n * math.sin(ra1_rad) * math.tan(dec1_rad) / 15)) * n_years) / 3600
   ra2 = degrees_to_decimal_degrees(Degrees(ra1)) + s1
   s2 = (n * math.cos(ra1_rad) * n_years) / 3600
@@ -295,8 +297,8 @@ def precession_low_precision(equatorial_coordinates: EquatorialCoordinates, orig
   return EquatorialCoordinates((Declination(decimal_degrees_to_degrees(dec2)), RightAscension(Time(decimal_degrees_to_degrees(ra2)))))
 
 def nutation_from_date(greenwich_date: Date) -> tuple:
-  jd = time_functions.greenwich_to_julian_date(greenwich_date)
-  t_centuries = time_functions.julian_date_to_epoch(jd, -2415020) / 36525
+  jd = greenwich_to_julian_date(greenwich_date)
+  t_centuries = julian_date_to_epoch(jd, -2415020) / 36525
   a = 100.0021358 * t_centuries
   l1 = 279.6967 + (0.000303 * t_centuries**2)
   l2 = l1 + 360 * (a - math.floor(a))
@@ -310,6 +312,22 @@ def nutation_from_date(greenwich_date: Date) -> tuple:
   nutation_obliquity = (9.2 * math.cos(n3) + 0.5 * math.cos(2 * l4)) / 3600
 
   return (nutation_longtitude, nutation_obliquity)
+
+def aberration_from_date(ut_date: FullDate, true_ecliptic_coordinates: EclipticCoordinates) -> EclipticCoordinates:
+  lat, long = true_ecliptic_coordinates 
+  true_long = degrees_to_decimal_degrees(long)
+  true_lat = degrees_to_decimal_degrees(lat)
+  sun_long = sun_longitude(ut_date,0,0)
+  dlong = -20.5 * math.cos(math.radians(sun_long - true_long)) / math.cos(math.radians(true_lat))
+  dlat = -20.5 * math.sin(math.radians(sun_long - true_long)) * math.sin(math.radians(true_lat))
+  apparent_long = decimal_degrees_to_degrees(true_long + (dlong / 3600))
+  apparent_lat = decimal_degrees_to_degrees(true_lat + (dlat / 3600))
+
+  return EclipticCoordinates((apparent_lat, apparent_long))
+
+
+
+
 
 # if __name__ == '__main__':
     

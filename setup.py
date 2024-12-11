@@ -8,7 +8,7 @@ setup(
     long_description_content_type='text/markdown',
     author='Artur Foden',
     url='https://github.com/yourusername/practical_astronomy',
-    packages=find_packages(where='src'),
+    # packages=find_packages(where='src'),
     package_dir={'': 'src'},
     classifiers=[
         'Programming Language :: Python :: 3',

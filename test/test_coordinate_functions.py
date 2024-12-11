@@ -1,5 +1,5 @@
 import unittest
-import coordinate_functions
+from af_practical_astronomy import coordinate_functions
 from astronomy_types import FullDate, Date, Time, HorizontalCoordinates, Degrees, EquatorialCoordinates, HourAngle, RightAscension, EclipticCoordinates, Declination, EquatorialCoordinatesHourAngle, Altitude, Azimuth, GeographicCoordinates, GalacticCoordinates
 
 
@@ -109,3 +109,11 @@ class CoordinateTestMethods(unittest.TestCase):
     msg = "test_nutation_from_date fail"
 
     self.assertEqual(coordinate_functions.nutation_from_date(Date((1988,9,1))), (0.0015258083552917808, 0.0025671004471993584), msg)
+
+  def test_abberation_from_date(self): 
+    msg = "test_abberation_from_date fail"
+
+    full_date = FullDate((Date((1988,9,8)),Time((0,0,0))))    
+    coordinates = EclipticCoordinates((Degrees((-1,32,56.4)), Degrees((352,37,10.1))))
+
+    self.assertEqual(coordinate_functions.aberration_from_date(full_date, coordinates), ((-1,32,56.33), (352,37,30.45)), msg)
