@@ -1,5 +1,5 @@
 import math
-from .coordinate_functions import *
+from .coordinate_functions import ecliptic_to_equatorial_coordinates
 from .time_functions import *
 from .utils import *
 from astronomy_types import  FullDate,  Degrees, EquatorialCoordinates, Longitude, EclipticCoordinates
