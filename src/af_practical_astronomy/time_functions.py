@@ -48,10 +48,7 @@ def year_is_leap(year: Year) -> bool:
   year_divisable_by_100 = year % 100 == 0
   year_divisable_by_400 = year % 400 == 0
   
-  if((year_divisable_by_4 and year_divisable_by_100 and year_divisable_by_400) or (year_divisable_by_4 and not year_divisable_by_100)):
-    return True
-    
-  return False
+  return (year_divisable_by_4 and year_divisable_by_100 and year_divisable_by_400) or (year_divisable_by_4 and not year_divisable_by_100)
 
 def greenwich_to_julian_date(date: Date) -> JulianDate:
   year, month, day = date
