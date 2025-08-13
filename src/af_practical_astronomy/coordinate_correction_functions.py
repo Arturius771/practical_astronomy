@@ -1,11 +1,15 @@
 
 import math
+from typing import NewType, Tuple
 from .coordinate_functions import decimal_degrees_to_degrees, degrees_to_decimal_degrees, degrees_to_hours, hours_to_degrees
 from .time_functions import greenwich_sidereal_to_universal_time, greenwich_to_julian_date, julian_date_to_epoch, local_sidereal_to_greenwich_sidereal_time
 from .utils import decimal_time_to_time
 from .sun_functions import sun_longitude
 
-from astronomy_types import Date, Time, FullDate, Degrees, DecimalDegrees, RightAscension, EquatorialCoordinates,  EclipticCoordinates, Declination, GeographicCoordinates, Epoch
+from astronomy_types import Date, Time, FullDate, Degrees, DecimalDegrees, RightAscension, EquatorialCoordinates,  EclipticCoordinates, Declination, GeographicCoordinates, Epoch ,Azimuth
+
+
+RisingAndSetting = NewType('RisingAndSetting', Tuple[bool, Time, Time, Azimuth, Azimuth])
 
 def angle_difference(object1_coordinates: EquatorialCoordinates, object2_coordinates: EquatorialCoordinates) -> Degrees:
   declination1, right_ascension1 = object1_coordinates
@@ -28,7 +32,10 @@ def angle_difference(object1_coordinates: EquatorialCoordinates, object2_coordin
 
   return decimal_degrees_to_degrees(deg_d)
   
-def rising_and_setting(target_coordinates: EquatorialCoordinates, observer_coordinates: GeographicCoordinates, greenwich_date: Date, vertical_shift: DecimalDegrees) -> tuple:
+def rising_and_setting(target_coordinates: EquatorialCoordinates, observer_coordinates: GeographicCoordinates, greenwich_date: Date, vertical_shift: DecimalDegrees) -> RisingAndSetting:
+  """
+  Calculates a tuple containing the targets rising and setting time and position. 
+  """
   dec, ra = target_coordinates
   decimal_right_ascension = degrees_to_decimal_degrees(Degrees(ra))
   radians_declination = math.radians(degrees_to_decimal_degrees(dec))
@@ -46,8 +53,8 @@ def rising_and_setting(target_coordinates: EquatorialCoordinates, observer_coord
   set_lst = (decimal_right_ascension + hours_h) - 24 * int(((decimal_right_ascension + hours_h))/ 24)
 
   a = math.degrees(math.acos((math.sin(radians_declination) + math.sin(radians_vertical_shift) * math.sin(radians_geographic_latitude)) / (math.cos(radians_vertical_shift) * math.cos(radians_geographic_latitude))))
-  rise_az = a - 360 * int(a / 360)
-  set_az = (360 - a) - 360 * int((360 - a)/ 360)
+  rise_az = Azimuth(a - 360 * int(a / 360))
+  set_az = Azimuth((360 - a) - 360 * int((360 - a)/ 360))
 
   rise_greenwich_sidereal_time = local_sidereal_to_greenwich_sidereal_time(decimal_time_to_time(rise_lst), long)
   rise_full_date = FullDate((greenwich_date, rise_greenwich_sidereal_time))
@@ -58,11 +65,15 @@ def rising_and_setting(target_coordinates: EquatorialCoordinates, observer_coord
   rise_time_adjusted = Time((r_h, r_m, r_s + 0.008333))
   set_time_adjusted = Time((s_h, s_m, s_s + 0.008333))
 
+  # Circumpolar if the target never sets below the horizon. 
   circumpolar = True if cosine_ha < 1 else False
 
-  return (circumpolar, rise_time_adjusted, set_time_adjusted, rise_az, set_az)
+  return RisingAndSetting((circumpolar, rise_time_adjusted, set_time_adjusted, rise_az, set_az))
 
 def precession_low_precision(equatorial_coordinates: EquatorialCoordinates, original_epoch: Epoch, new_epoch: Epoch) -> EquatorialCoordinates:
+  """
+  Precession is the periodic change in orientation of the rotational axis of the central body. 
+  """
   dec1, ra1 = equatorial_coordinates
   dec1_rad = math.radians(degrees_to_decimal_degrees(dec1))
   ra1_rad = math.radians(degrees_to_hours(degrees_to_decimal_degrees(Degrees(ra1))))
@@ -77,7 +88,11 @@ def precession_low_precision(equatorial_coordinates: EquatorialCoordinates, orig
 
   return EquatorialCoordinates((Declination(decimal_degrees_to_degrees(dec2)), RightAscension(Time(decimal_degrees_to_degrees(ra2)))))
 
+
 def nutation_from_date(greenwich_date: Date) -> tuple:
+  """
+  Nutation occurs due to gravitational effects from other bodies causing the axial precession to vary. 
+  """
   jd = greenwich_to_julian_date(greenwich_date)
   t_centuries = julian_date_to_epoch(jd, -2415020) / 36525
   a = 100.0021358 * t_centuries
@@ -95,6 +110,9 @@ def nutation_from_date(greenwich_date: Date) -> tuple:
   return (nutation_longtitude, nutation_obliquity)
 
 def aberration_from_date(ut_date: FullDate, true_ecliptic_coordinates: EclipticCoordinates) -> EclipticCoordinates:
+  """
+  Aberration is the apparent motion of a subject caused by the displacement of the observer's position. The object will appear to move towards the observer's direction of motion. 
+  """
   lat, long = true_ecliptic_coordinates 
   true_long = degrees_to_decimal_degrees(long)
   true_lat = degrees_to_decimal_degrees(lat)
