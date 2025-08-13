@@ -3,12 +3,13 @@ import math
 from typing import NewType, Tuple
 from .coordinate_functions import decimal_degrees_to_degrees, degrees_to_decimal_degrees, degrees_to_hours, hours_to_degrees
 from .time_functions import greenwich_sidereal_to_universal_time, greenwich_to_julian_date, julian_date_to_epoch, local_sidereal_to_greenwich_sidereal_time
-from .utils import decimal_time_to_time
+from .utils import decimal_time_to_time, float_to_decimal_degrees
 from .sun_functions import sun_longitude
-from astronomy_types import Date, Time, FullDate, Degrees, DecimalDegrees, RightAscension, EquatorialCoordinates,  EclipticCoordinates, Declination, GeographicCoordinates, Epoch ,Azimuth
+from astronomy_types import Date, Time, FullDate, Degrees, DecimalDegrees, RightAscension, EquatorialCoordinates,  EclipticCoordinates, Declination, GeographicCoordinates, Epoch, Azimuth, Obliquity, Longitude
 
 
 RisingAndSetting = NewType('RisingAndSetting', Tuple[bool, Time, Time, Azimuth, Azimuth])
+NutationAndObliquity = NewType('NutationAndObliquity', Tuple[Longitude, Obliquity])
 
 def angle_difference(object1_coordinates: EquatorialCoordinates, object2_coordinates: EquatorialCoordinates) -> Degrees:
   declination1, right_ascension1 = object1_coordinates
@@ -88,7 +89,7 @@ def precession_low_precision(equatorial_coordinates: EquatorialCoordinates, orig
   return EquatorialCoordinates((Declination(decimal_degrees_to_degrees(dec2)), RightAscension(Time(decimal_degrees_to_degrees(ra2)))))
 
 
-def nutation_from_date(greenwich_date: Date) -> tuple:
+def nutation_from_date(greenwich_date: Date) -> NutationAndObliquity:
   """
   Nutation occurs due to gravitational effects from other bodies causing the axial precession to vary. 
   """
@@ -106,7 +107,7 @@ def nutation_from_date(greenwich_date: Date) -> tuple:
   nutation_longtitude = (-17.2 * math.sin(n3) - 1.3 * math.sin(2 * l4)) / 3600
   nutation_obliquity = (9.2 * math.cos(n3) + 0.5 * math.cos(2 * l4)) / 3600
 
-  return (nutation_longtitude, nutation_obliquity)
+  return NutationAndObliquity((nutation_longtitude, nutation_obliquity))
 
 def aberration_from_date(ut_date: FullDate, true_ecliptic_coordinates: EclipticCoordinates) -> EclipticCoordinates:
   """

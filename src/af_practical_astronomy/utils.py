@@ -1,5 +1,5 @@
 import math
-from astronomy_types import Time, DecimalTime
+from astronomy_types import Time, DecimalTime, DecimalDegrees
 
 # def degrees_to_radians(degrees):
 #     return degrees * (math.pi / 180) or math.radians(degrees)
@@ -26,3 +26,7 @@ def decimal_time_to_time(decimal_value: DecimalTime) -> Time:
   unsigned_value = math.floor(remainder / 3600)
 
   return Time((unsigned_value, minutes, seconds))
+
+# TODO: This doesn't work since DecimalDegrees is not callable. We may need to convert `DecimalDegrees` into `NewTypes`
+def float_to_decimal_degrees(float: float) -> DecimalDegrees:
+  return DecimalDegrees(float)
