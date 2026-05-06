@@ -1,20 +1,20 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='af_practical_astronomy',
-    version='1.0.8',
-    description='A practical astronomy library',
-    long_description=open('README.md').read(),
-    long_description_content_type='text/markdown',
-    author='Artur Foden',
-    url='https://github.com/yourusername/practical_astronomy',
-    packages=find_packages(where='src'),
-    package_dir={'': 'src'},
+    name="af_practical_astronomy",
+    version="1.0.9",
+    description="A practical astronomy library",
+    long_description=open("README.md").read(),
+    long_description_content_type="text/markdown",
+    author="Artur Foden",
+    url="https://github.com/yourusername/practical_astronomy",
+    packages=find_packages(where="src"),
+    package_dir={"": "src"},
     classifiers=[
-        'Programming Language :: Python :: 3',
+        "Programming Language :: Python :: 3",
     ],
-    install_requires=[  
-        'astronomy_types',
+    install_requires=[
+        "astronomy_types==2.0.0",
     ],
-    test_suite='test',
+    test_suite="test",
 )

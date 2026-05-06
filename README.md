@@ -94,7 +94,7 @@ setup(
 ## 4. Build the dist
 
 ```bash
-python3 setup.py sdist bdist_wheel
+python setup.py sdist bdist_wheel
 ```
 
 ## 5. Upload with `twine`
