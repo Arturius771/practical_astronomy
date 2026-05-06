@@ -27,9 +27,8 @@ from astronomy_types import (
     Time,
     Epoch,
     Latitude,
-    Hour,
-    Minute,
     Second,
+    radians,
 )
 
 
@@ -69,7 +68,7 @@ def rising_and_setting(
     latitude = float(observer_coordinates.latitude)
     longitude = observer_coordinates.longitude
 
-    vertical_shift_radians = math.radians(float(vertical_shift))
+    vertical_shift_radians = radians(float(vertical_shift))
 
     cosine_ha = -(
         math.sin(vertical_shift_radians) + math.sin(latitude) * math.sin(declination)
@@ -91,8 +90,8 @@ def rising_and_setting(
 
     azimuth_angle_degrees = math.degrees(math.acos(azimuth_argument))
 
-    rise_azimuth = Azimuth(Radians(math.radians(azimuth_angle_degrees % 360)))
-    set_azimuth = Azimuth(Radians(math.radians((360 - azimuth_angle_degrees) % 360)))
+    rise_azimuth = Azimuth(Radians(radians(azimuth_angle_degrees % 360)))
+    set_azimuth = Azimuth(Radians(radians((360 - azimuth_angle_degrees) % 360)))
 
     rise_greenwich_sidereal_time = local_sidereal_to_greenwich_sidereal_time(
         decimal_time_to_time(DecimalTime(rise_lst)),
@@ -172,10 +171,8 @@ def precession_low_precision(
     new_declination_degrees = declination_degrees + s2
 
     return EquatorialCoordinates(
-        declination=Declination(Radians(math.radians(new_declination_degrees))),
-        right_ascension=RightAscension(
-            Radians(math.radians(new_right_ascension_degrees))
-        ),
+        declination=Declination(Radians(radians(new_declination_degrees))),
+        right_ascension=RightAscension(Radians(radians(new_right_ascension_degrees))),
     )
 
 
@@ -190,20 +187,20 @@ def nutation_from_date(greenwich_date: Date) -> NutationAndObliquity:
     l1 = 279.6967 + (0.000303 * t_centuries**2)
     l2 = l1 + 360 * (a - math.floor(a))
     l3 = l2 % 360
-    l4 = math.radians(l3)
+    l4 = radians(l3)
 
     b = 5.372617 * t_centuries
     n1 = 259.1833 - 360 * (b - math.floor(b))
     n2 = n1 % 360
-    n3 = math.radians(n2)
+    n3 = radians(n2)
 
     nutation_longitude_degrees = (-17.2 * math.sin(n3) - 1.3 * math.sin(2 * l4)) / 3600
 
     nutation_obliquity_degrees = (9.2 * math.cos(n3) + 0.5 * math.cos(2 * l4)) / 3600
 
     return NutationAndObliquity(
-        nutation_longitude=Longitude(Radians(math.radians(nutation_longitude_degrees))),
-        nutation_obliquity=Obliquity(Radians(math.radians(nutation_obliquity_degrees))),
+        nutation_longitude=Longitude(Radians(radians(nutation_longitude_degrees))),
+        nutation_obliquity=Obliquity(Radians(radians(nutation_obliquity_degrees))),
     )
 
 
@@ -224,14 +221,14 @@ def aberration_from_date(
 
     delta_longitude_arcseconds = (
         -20.5
-        * math.cos(math.radians(sun_longitude_degrees - true_longitude_degrees))
-        / math.cos(math.radians(true_latitude_degrees))
+        * math.cos(radians(sun_longitude_degrees - true_longitude_degrees))
+        / math.cos(radians(true_latitude_degrees))
     )
 
     delta_latitude_arcseconds = (
         -20.5
-        * math.sin(math.radians(sun_longitude_degrees - true_longitude_degrees))
-        * math.sin(math.radians(true_latitude_degrees))
+        * math.sin(radians(sun_longitude_degrees - true_longitude_degrees))
+        * math.sin(radians(true_latitude_degrees))
     )
 
     apparent_longitude_degrees = (
@@ -241,6 +238,6 @@ def aberration_from_date(
     apparent_latitude_degrees = true_latitude_degrees + delta_latitude_arcseconds / 3600
 
     return EclipticCoordinates(
-        latitude=Latitude(Radians(math.radians(apparent_latitude_degrees))),
-        longitude=Longitude(Radians(math.radians(apparent_longitude_degrees))),
+        latitude=Latitude(Radians(radians(apparent_latitude_degrees))),
+        longitude=Longitude(Radians(radians(apparent_longitude_degrees))),
     )

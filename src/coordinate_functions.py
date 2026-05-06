@@ -27,6 +27,7 @@ from astronomy_types import (
     Obliquity,
     Radians,
     RightAscension,
+    radians,
 )
 
 
@@ -60,7 +61,7 @@ def right_ascension_to_hour_angle(
     hour_angle_hours = (float(lst_decimal) - right_ascension_hours) % 24
     hour_angle_degrees = hour_angle_hours * 15
 
-    return HourAngle(Radians(math.radians(hour_angle_degrees)))
+    return HourAngle(Radians(radians(hour_angle_degrees)))
 
 
 def hour_angle_to_right_ascension(
@@ -80,7 +81,7 @@ def hour_angle_to_right_ascension(
     right_ascension_hours = (float(lst_decimal) - hour_angle_hours) % 24
     right_ascension_degrees = right_ascension_hours * 15
 
-    return RightAscension(Radians(math.radians(right_ascension_degrees)))
+    return RightAscension(Radians(radians(right_ascension_degrees)))
 
 
 def equatorial_to_horizon_coordinates(
@@ -146,7 +147,7 @@ def mean_obliquity_ecliptic(greenwich_date: Date) -> Obliquity:
 
     obliquity_degrees = 23.439292 - de
 
-    return Obliquity(Radians(math.radians(obliquity_degrees)))
+    return Obliquity(Radians(radians(obliquity_degrees)))
 
 
 def ecliptic_to_equatorial_coordinates(
@@ -159,7 +160,7 @@ def ecliptic_to_equatorial_coordinates(
     obliquity = float(mean_obliquity_ecliptic(greenwich_date))
 
     # Existing empirical correction retained from your old code.
-    obliquity += math.radians(0.001176447533936198)
+    obliquity += radians(0.001176447533936198)
 
     sin_declination = math.sin(ecliptic_latitude) * math.cos(obliquity) + math.cos(
         ecliptic_latitude
@@ -197,7 +198,7 @@ def equatorial_to_ecliptic_coordinates(
 
     sin_ecliptic_latitude = max(-1.0, min(1.0, sin_ecliptic_latitude))
 
-    # Existing empirical correction retained from your old code.
+    # Existing empirical correction retained from old code.
     ecliptic_latitude = math.asin(sin_ecliptic_latitude) - 1.3284561980173026e-05
 
     y = math.sin(right_ascension) * math.cos(obliquity) + math.tan(
@@ -219,8 +220,8 @@ def equatorial_to_galactic_coordinates(
     declination = float(equatorial_coordinates.declination)
     right_ascension = float(equatorial_coordinates.right_ascension)
 
-    pole_declination = math.radians(27.4)
-    pole_right_ascension = math.radians(192.25)
+    pole_declination = radians(27.4)
+    pole_right_ascension = radians(192.25)
 
     sin_galactic_latitude = math.cos(declination) * math.cos(
         pole_declination
@@ -242,7 +243,7 @@ def equatorial_to_galactic_coordinates(
         * math.cos(pole_declination)
     )
 
-    galactic_longitude = math.radians((math.degrees(math.atan2(y, x)) + 33) % 360)
+    galactic_longitude = radians((math.degrees(math.atan2(y, x)) + 33) % 360)
 
     return GalacticCoordinates(
         latitude=Latitude(Radians(galactic_latitude)),
@@ -256,8 +257,8 @@ def galactic_to_equatorial_coordinates(
     galactic_latitude = float(galactic_coordinates.latitude)
     galactic_longitude = float(galactic_coordinates.longitude)
 
-    pole_declination = math.radians(27.4)
-    longitude_offset = math.radians(33)
+    pole_declination = radians(27.4)
+    longitude_offset = radians(33)
 
     sin_declination = math.cos(galactic_latitude) * math.cos(
         pole_declination
@@ -277,7 +278,7 @@ def galactic_to_equatorial_coordinates(
         galactic_latitude
     ) * math.sin(pole_declination) * math.sin(galactic_longitude - longitude_offset)
 
-    right_ascension = math.radians((math.degrees(math.atan2(y, x)) + 192.25) % 360)
+    right_ascension = radians((math.degrees(math.atan2(y, x)) + 192.25) % 360)
 
     return EquatorialCoordinates(
         declination=Declination(Radians(declination)),

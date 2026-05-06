@@ -1,7 +1,6 @@
 import math
 import unittest
 
-import time_functions
 from astronomy_types import (
     Date,
     Day,
@@ -17,6 +16,25 @@ from astronomy_types import (
     Second,
     Time,
     Year,
+    radians,
+)
+
+from time_functions import (
+    date_of_easter,
+    date_to_day_number,
+    decimal_hours_to_hours_minutes_seconds,
+    finding_day_of_week,
+    greenwich_sidereal_to_local_sidereal_time,
+    greenwich_sidereal_to_universal_time,
+    greenwich_to_julian_date,
+    hours_minutes_seconds_to_decimal_time,
+    julian_date_to_j2000,
+    julian_to_greenwich_date,
+    local_civil_to_universal_time,
+    local_sidereal_to_greenwich_sidereal_time,
+    universal_to_greenwich_sidereal_time,
+    universal_to_local_civil_time,
+    year_is_leap,
 )
 
 
@@ -100,48 +118,48 @@ def assert_full_date_equal(
 
 class TimeTestMethods(unittest.TestCase):
     def test_date_of_easter(self):
-        assert_date_equal(self, time_functions.date_of_easter(Year(2009)), 2009, 4, 12)
-        assert_date_equal(self, time_functions.date_of_easter(Year(2010)), 2010, 4, 4)
-        assert_date_equal(self, time_functions.date_of_easter(Year(2024)), 2024, 3, 31)
+        assert_date_equal(self, date_of_easter(Year(2009)), 2009, 4, 12)
+        assert_date_equal(self, date_of_easter(Year(2010)), 2010, 4, 4)
+        assert_date_equal(self, date_of_easter(Year(2024)), 2024, 3, 31)
 
     def test_date_to_day_number(self):
-        self.assertEqual(time_functions.date_to_day_number(make_date(2000, 1, 1)), 1)
+        self.assertEqual(date_to_day_number(make_date(2000, 1, 1)), 1)
         self.assertEqual(
-            time_functions.date_to_day_number(make_date(2000, 12, 31)),
+            date_to_day_number(make_date(2000, 12, 31)),
             366,
         )
         self.assertEqual(
-            time_functions.date_to_day_number(make_date(1900, 12, 31)),
+            date_to_day_number(make_date(1900, 12, 31)),
             365,
         )
 
     def test_greenwich_to_julian_date(self):
         self.assertEqual(
-            time_functions.greenwich_to_julian_date(make_date(2009, 6, 19.75)),
+            greenwich_to_julian_date(make_date(2009, 6, 19.75)),
             JulianDate(2455002.25),
         )
         self.assertEqual(
-            time_functions.greenwich_to_julian_date(make_date(1969, 1, 5)),
+            greenwich_to_julian_date(make_date(1969, 1, 5)),
             JulianDate(2440226.5),
         )
 
     def test_julian_date_to_j2000(self):
         self.assertEqual(
-            time_functions.julian_date_to_j2000(JulianDate(2440227.54513888889)),
+            julian_date_to_j2000(JulianDate(2440227.54513888889)),
             -11317.454861111008,
         )
 
     def test_julian_to_greenwich_date(self):
         assert_date_equal(
             self,
-            time_functions.julian_to_greenwich_date(JulianDate(2455002.25)),
+            julian_to_greenwich_date(JulianDate(2455002.25)),
             2009,
             6,
             19.75,
         )
         assert_date_equal(
             self,
-            time_functions.julian_to_greenwich_date(JulianDate(2440588)),
+            julian_to_greenwich_date(JulianDate(2440588)),
             1970,
             1,
             1.5,
@@ -149,53 +167,49 @@ class TimeTestMethods(unittest.TestCase):
 
     def test_finding_day_of_week(self):
         self.assertEqual(
-            time_functions.finding_day_of_week(JulianDate(2455001.5)),
+            finding_day_of_week(JulianDate(2455001.5)),
             DaysOfWeek.Friday,
         )
         self.assertEqual(
-            time_functions.finding_day_of_week(
-                time_functions.greenwich_to_julian_date(make_date(2024, 4, 7))
-            ),
+            finding_day_of_week(greenwich_to_julian_date(make_date(2024, 4, 7))),
             DaysOfWeek.Sunday,
         )
 
     def test_hours_minutes_seconds_to_decimal_time(self):
         self.assertEqual(
-            time_functions.hours_minutes_seconds_to_decimal_time(make_time(18, 31, 27)),
+            hours_minutes_seconds_to_decimal_time(make_time(18, 31, 27)),
             DecimalTime(18.524166666666666),
         )
         self.assertEqual(
-            time_functions.hours_minutes_seconds_to_decimal_time(
+            hours_minutes_seconds_to_decimal_time(
                 make_time(18, 31, 27),
                 False,
             ),
             DecimalTime(6.524166666666666),
         )
         self.assertEqual(
-            time_functions.hours_minutes_seconds_to_decimal_time(
+            hours_minutes_seconds_to_decimal_time(
                 make_time(11, 31, 5),
                 False,
             ),
             DecimalTime(11.518055555555556),
         )
         self.assertEqual(
-            time_functions.hours_minutes_seconds_to_decimal_time(
+            hours_minutes_seconds_to_decimal_time(
                 make_time(12, 0, 0),
                 False,
             ),
             DecimalTime(12),
         )
         self.assertEqual(
-            time_functions.hours_minutes_seconds_to_decimal_time(make_time(12, 0, 0)),
+            hours_minutes_seconds_to_decimal_time(make_time(12, 0, 0)),
             DecimalTime(12),
         )
 
     def test_decimal_hours_to_hours_minutes_seconds(self):
         assert_time_equal(
             self,
-            time_functions.decimal_hours_to_hours_minutes_seconds(
-                DecimalTime(18.52416667)
-            ),
+            decimal_hours_to_hours_minutes_seconds(DecimalTime(18.52416667)),
             18,
             31,
             27,
@@ -206,7 +220,7 @@ class TimeTestMethods(unittest.TestCase):
 
         assert_full_date_equal(
             self,
-            time_functions.local_civil_to_universal_time(lct, 1, 4),
+            local_civil_to_universal_time(lct, 1, 4),
             2013,
             6,
             30,
@@ -220,7 +234,7 @@ class TimeTestMethods(unittest.TestCase):
 
         assert_full_date_equal(
             self,
-            time_functions.universal_to_local_civil_time(utc, 4, 1),
+            universal_to_local_civil_time(utc, 4, 1),
             2013,
             7,
             1,
@@ -234,7 +248,7 @@ class TimeTestMethods(unittest.TestCase):
 
         assert_time_equal(
             self,
-            time_functions.universal_to_greenwich_sidereal_time(utc),
+            universal_to_greenwich_sidereal_time(utc),
             4,
             40,
             5.23,
@@ -245,7 +259,7 @@ class TimeTestMethods(unittest.TestCase):
 
         assert_full_date_equal(
             self,
-            time_functions.greenwich_sidereal_to_universal_time(full_date),
+            greenwich_sidereal_to_universal_time(full_date),
             1980,
             4,
             22,
@@ -257,9 +271,9 @@ class TimeTestMethods(unittest.TestCase):
     def test_greenwich_sidereal_to_local_sidereal_time(self):
         assert_time_equal(
             self,
-            time_functions.greenwich_sidereal_to_local_sidereal_time(
+            greenwich_sidereal_to_local_sidereal_time(
                 make_time(4, 40, 5.23),
-                Longitude(Radians(math.radians(-64))),
+                Longitude(Radians(radians(-64))),
             ),
             0,
             24,
@@ -269,9 +283,9 @@ class TimeTestMethods(unittest.TestCase):
     def test_local_sidereal_to_greenwich_sidereal_time(self):
         assert_time_equal(
             self,
-            time_functions.local_sidereal_to_greenwich_sidereal_time(
+            local_sidereal_to_greenwich_sidereal_time(
                 make_time(0, 24, 5.23),
-                Longitude(Radians(math.radians(-64))),
+                Longitude(Radians(radians(-64))),
             ),
             4,
             40,
@@ -279,13 +293,13 @@ class TimeTestMethods(unittest.TestCase):
         )
 
     def test_year_is_leap(self):
-        self.assertTrue(time_functions.year_is_leap(Year(1600)))
-        self.assertFalse(time_functions.year_is_leap(Year(1900)))
-        self.assertTrue(time_functions.year_is_leap(Year(1992)))
-        self.assertTrue(time_functions.year_is_leap(Year(2000)))
-        self.assertFalse(time_functions.year_is_leap(Year(2023)))
-        self.assertTrue(time_functions.year_is_leap(Year(2024)))
-        self.assertTrue(time_functions.year_is_leap(Year(2048)))
+        self.assertTrue(year_is_leap(Year(1600)))
+        self.assertFalse(year_is_leap(Year(1900)))
+        self.assertTrue(year_is_leap(Year(1992)))
+        self.assertTrue(year_is_leap(Year(2000)))
+        self.assertFalse(year_is_leap(Year(2023)))
+        self.assertTrue(year_is_leap(Year(2024)))
+        self.assertTrue(year_is_leap(Year(2048)))
 
 
 if __name__ == "__main__":

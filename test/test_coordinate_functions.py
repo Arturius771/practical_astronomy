@@ -1,7 +1,6 @@
 import math
 import unittest
 
-import coordinate_functions
 from astronomy_types import (
     Altitude,
     Azimuth,
@@ -30,6 +29,19 @@ from astronomy_types import (
     Year,
     dms_to_radians,
     hms_to_radians,
+    radians,
+)
+
+from coordinate_functions import (
+    ecliptic_to_equatorial_coordinates,
+    equatorial_to_ecliptic_coordinates,
+    equatorial_to_galactic_coordinates,
+    equatorial_to_horizon_coordinates,
+    galactic_to_equatorial_coordinates,
+    horizon_to_equatorial_coordinates,
+    hour_angle_to_right_ascension,
+    mean_obliquity_ecliptic,
+    right_ascension_to_hour_angle,
 )
 
 
@@ -84,12 +96,12 @@ class CoordinateTestMethods(unittest.TestCase):
             time=make_time(14, 36, 51.67),
         )
 
-        result = coordinate_functions.right_ascension_to_hour_angle(
+        result = right_ascension_to_hour_angle(
             RightAscension(hms_to_radians(HMS(18, 32, 21))),
             full_date,
             0,
             -4,
-            Longitude(Radians(math.radians(-64))),
+            Longitude(Radians(radians(-64))),
         )
 
         self.assertAlmostEqual(
@@ -104,12 +116,12 @@ class CoordinateTestMethods(unittest.TestCase):
             time=make_time(14, 36, 51.67),
         )
 
-        result = coordinate_functions.hour_angle_to_right_ascension(
+        result = hour_angle_to_right_ascension(
             HourAngle(hms_to_radians(HMS(9, 52, 23.66))),
             full_date,
             0,
             -4,
-            Longitude(Radians(math.radians(-64))),
+            Longitude(Radians(radians(-64))),
         )
 
         self.assertAlmostEqual(
@@ -124,9 +136,9 @@ class CoordinateTestMethods(unittest.TestCase):
             hour_angle=HourAngle(hms_to_radians(HMS(5, 51, 44))),
         )
 
-        result = coordinate_functions.equatorial_to_horizon_coordinates(
+        result = equatorial_to_horizon_coordinates(
             coordinates,
-            Latitude(Radians(math.radians(52))),
+            Latitude(Radians(radians(52))),
         )
 
         assert_angle_degrees(
@@ -147,9 +159,9 @@ class CoordinateTestMethods(unittest.TestCase):
             azimuth=Azimuth(dms_to_radians(DMS(283, 16, 15.76))),
         )
 
-        result = coordinate_functions.horizon_to_equatorial_coordinates(
+        result = horizon_to_equatorial_coordinates(
             coordinates,
-            Latitude(Radians(math.radians(52))),
+            Latitude(Radians(radians(52))),
         )
 
         assert_angle_degrees(
@@ -165,7 +177,7 @@ class CoordinateTestMethods(unittest.TestCase):
         )
 
     def test_mean_obliquity_ecliptic(self):
-        result = coordinate_functions.mean_obliquity_ecliptic(make_date(2009, 7, 6))
+        result = mean_obliquity_ecliptic(make_date(2009, 7, 6))
 
         assert_angle_degrees(self, result, 23.438055312466062, places=8)
 
@@ -175,7 +187,7 @@ class CoordinateTestMethods(unittest.TestCase):
             longitude=Longitude(dms_to_radians(DMS(139, 41, 10))),
         )
 
-        result = coordinate_functions.ecliptic_to_equatorial_coordinates(
+        result = ecliptic_to_equatorial_coordinates(
             coordinates,
             make_date(2009, 7, 6),
         )
@@ -198,7 +210,7 @@ class CoordinateTestMethods(unittest.TestCase):
             right_ascension=RightAscension(hms_to_radians(HMS(9, 34, 53.4))),
         )
 
-        result = coordinate_functions.equatorial_to_ecliptic_coordinates(
+        result = equatorial_to_ecliptic_coordinates(
             coordinates,
             make_date(2009, 7, 6),
         )
@@ -221,7 +233,7 @@ class CoordinateTestMethods(unittest.TestCase):
             right_ascension=RightAscension(hms_to_radians(HMS(10, 21, 0))),
         )
 
-        result = coordinate_functions.equatorial_to_galactic_coordinates(coordinates)
+        result = equatorial_to_galactic_coordinates(coordinates)
 
         assert_angle_degrees(
             self,
@@ -241,7 +253,7 @@ class CoordinateTestMethods(unittest.TestCase):
             longitude=Longitude(dms_to_radians(DMS(232, 14, 52.38))),
         )
 
-        result = coordinate_functions.galactic_to_equatorial_coordinates(coordinates)
+        result = galactic_to_equatorial_coordinates(coordinates)
 
         assert_angle_degrees(
             self,

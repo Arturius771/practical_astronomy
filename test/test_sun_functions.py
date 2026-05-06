@@ -1,7 +1,6 @@
 import math
 import unittest
 
-import sun_functions
 from astronomy_types import (
     Date,
     Day,
@@ -13,6 +12,8 @@ from astronomy_types import (
     Time,
     Year,
 )
+
+from sun_functions import sun_position_approximate
 
 
 def make_date(year: int, month: int, day: float) -> Date:
@@ -39,7 +40,7 @@ class SunTestMethods(unittest.TestCase):
             time=make_time(0, 0, 0),
         )
 
-        result = sun_functions.sun_position_approximate(local_date, 0, 0)
+        result = sun_position_approximate(local_date, 0, 0)
 
         self.assertAlmostEqual(
             math.degrees(float(result.declination)),

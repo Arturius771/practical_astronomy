@@ -16,6 +16,7 @@ from astronomy_types import (
     Month,
     Radians,
     Year,
+    radians,
 )
 
 
@@ -34,9 +35,7 @@ def sun_longitude(
         eccentricity = 0.016705
 
         return mean_anomaly_degrees + (
-            (360 / math.pi)
-            * eccentricity
-            * math.sin(math.radians(mean_anomaly_degrees))
+            (360 / math.pi) * eccentricity * math.sin(radians(mean_anomaly_degrees))
         )
 
     def sun_longitude_2010(true_anomaly_degrees: float) -> float:
@@ -72,7 +71,7 @@ def sun_longitude(
     longitude_degrees = sun_longitude_2010(true_anomaly)
     longitude_degrees_corrected = longitude_degrees % 360
 
-    return Longitude(Radians(math.radians(longitude_degrees_corrected)))
+    return Longitude(Radians(radians(longitude_degrees_corrected)))
 
 
 def sun_position_approximate(

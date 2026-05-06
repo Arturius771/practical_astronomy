@@ -1,7 +1,6 @@
 import math
 import unittest
 
-import coordinate_correction_functions
 from astronomy_types import (
     Date,
     Day,
@@ -27,6 +26,15 @@ from astronomy_types import (
     dms_to_radians,
     hms_to_radians,
     DMS,
+    radians,
+)
+
+from coordinate_correction_functions import (
+    aberration_from_date,
+    angle_difference,
+    nutation_from_date,
+    precession_low_precision,
+    rising_and_setting,
 )
 
 
@@ -68,7 +76,7 @@ class CoordinateCorrectionTestMethods(unittest.TestCase):
             right_ascension=RightAscension(hms_to_radians(HMS(6, 44, 13.4))),
         )
 
-        result = coordinate_correction_functions.angle_difference(
+        result = angle_difference(
             coordinates1,
             coordinates2,
         )
@@ -82,8 +90,8 @@ class CoordinateCorrectionTestMethods(unittest.TestCase):
         )
 
         location = GeographicCoordinates(
-            latitude=Latitude(Radians(math.radians(30))),
-            longitude=Longitude(Radians(math.radians(64))),
+            latitude=Latitude(Radians(radians(30))),
+            longitude=Longitude(Radians(radians(64))),
         )
 
         greenwich_date = Date(
@@ -92,7 +100,7 @@ class CoordinateCorrectionTestMethods(unittest.TestCase):
             day=Day(24),
         )
 
-        result = coordinate_correction_functions.rising_and_setting(
+        result = rising_and_setting(
             coordinates,
             location,
             greenwich_date,
@@ -136,7 +144,7 @@ class CoordinateCorrectionTestMethods(unittest.TestCase):
             right_ascension=RightAscension(hms_to_radians(HMS(9, 10, 43))),
         )
 
-        result = coordinate_correction_functions.precession_low_precision(
+        result = precession_low_precision(
             coordinates,
             Epoch(JulianDate(2433282.423)),
             Epoch(JulianDate(2444025.5)),
@@ -155,7 +163,7 @@ class CoordinateCorrectionTestMethods(unittest.TestCase):
         )
 
     def test_nutation_from_date(self):
-        result = coordinate_correction_functions.nutation_from_date(
+        result = nutation_from_date(
             Date(
                 year=Year(1988),
                 month=Month(9),
@@ -194,7 +202,7 @@ class CoordinateCorrectionTestMethods(unittest.TestCase):
             longitude=Longitude(dms_to_radians(DMS(352, 37, 10.1))),
         )
 
-        result = coordinate_correction_functions.aberration_from_date(
+        result = aberration_from_date(
             full_date,
             coordinates,
         )
