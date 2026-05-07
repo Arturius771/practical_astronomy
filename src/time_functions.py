@@ -73,6 +73,7 @@ def year_is_leap(year: Year) -> bool:
 
 
 def greenwich_to_julian_date(date: Date) -> JulianDate:
+    # TODO: update to take h:m:s
     year = int(date.year)
     month = int(date.month)
     day = float(date.day)
