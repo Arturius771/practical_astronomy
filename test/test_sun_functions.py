@@ -8,6 +8,7 @@ from astronomy_types import (
     Hour,
     Minute,
     Month,
+    Scalar,
     Second,
     Time,
     Year,
@@ -17,11 +18,11 @@ from sun_functions import sun_position_approximate
 
 
 def make_date(year: int, month: int, day: float) -> Date:
-    return Date(year=Year(year), month=Month(month), day=Day(day))
+    return Date(year=Year(year), month=Month(month), day=Day(Scalar(day)))
 
 
 def make_time(hour: int, minute: int, second: float) -> Time:
-    return Time(hour=Hour(hour), minute=Minute(minute), second=Second(second))
+    return Time(hour=Hour(hour), minute=Minute(minute), second=Second(Scalar(second)))
 
 
 def hms_to_decimal_hours(hours: int, minutes: int, seconds: float) -> float:

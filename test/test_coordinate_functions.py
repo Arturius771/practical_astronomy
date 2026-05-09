@@ -24,12 +24,13 @@ from astronomy_types import (
     Month,
     Radians,
     RightAscension,
+    Scalar,
     Second,
     Time,
     Year,
+    degrees_to_radians,
     dms_to_radians,
     hms_to_radians,
-    radians,
 )
 
 from coordinate_functions import (
@@ -46,11 +47,11 @@ from coordinate_functions import (
 
 
 def make_date(year: int, month: int, day: float) -> Date:
-    return Date(year=Year(year), month=Month(month), day=Day(day))
+    return Date(year=Year(year), month=Month(month), day=Day(Scalar(day)))
 
 
 def make_time(hour: int, minute: int, second: float) -> Time:
-    return Time(hour=Hour(hour), minute=Minute(minute), second=Second(second))
+    return Time(hour=Hour(hour), minute=Minute(minute), second=Second(Scalar(second)))
 
 
 def assert_angle_degrees(
@@ -77,12 +78,12 @@ def hms_to_decimal_hours(hours: int, minutes: int, seconds: float) -> float:
 
 class CoordinateTestMethods(unittest.TestCase):
     def test_decimal_degrees_to_degrees_minutes_seconds(self):
-        result = Degrees(182.52416666666667)
+        result = Degrees(Scalar(182.52416666666667))
 
-        self.assertAlmostEqual(float(result), 182.52416666666667, places=10)
+        self.assertAlmostEqual(result, 182.52416666666667, places=10)
 
     def test_degrees_minutes_seconds_to_decimal_degrees(self):
-        degrees = Degrees(182.52416666666667)
+        degrees = Degrees(Scalar(182.52416666666667))
 
         self.assertAlmostEqual(
             float(degrees),
@@ -101,7 +102,7 @@ class CoordinateTestMethods(unittest.TestCase):
             full_date,
             0,
             -4,
-            Longitude(Radians(radians(-64))),
+            Longitude(Radians(degrees_to_radians(Degrees(Scalar(-64))))),
         )
 
         self.assertAlmostEqual(
@@ -121,7 +122,7 @@ class CoordinateTestMethods(unittest.TestCase):
             full_date,
             0,
             -4,
-            Longitude(Radians(radians(-64))),
+            Longitude(Radians(degrees_to_radians(Degrees(Scalar(-64))))),
         )
 
         self.assertAlmostEqual(
@@ -132,13 +133,13 @@ class CoordinateTestMethods(unittest.TestCase):
 
     def test_equatorial_to_horizon_coordinates(self):
         coordinates = EquatorialCoordinatesHourAngle(
-            declination=Declination(dms_to_radians(DMS(23, 13, 10))),
-            hour_angle=HourAngle(hms_to_radians(HMS(5, 51, 44))),
+            Declination(dms_to_radians(DMS(23, 13, 10))),
+            HourAngle(hms_to_radians(HMS(5, 51, 44))),
         )
 
         result = equatorial_to_horizon_coordinates(
             coordinates,
-            Latitude(Radians(radians(52))),
+            Latitude(Radians(degrees_to_radians(Degrees(Scalar(52))))),
         )
 
         assert_angle_degrees(
@@ -155,13 +156,13 @@ class CoordinateTestMethods(unittest.TestCase):
 
     def test_horizon_to_equatorial_coordinates(self):
         coordinates = HorizontalCoordinates(
-            altitude=Altitude(dms_to_radians(DMS(19, 20, 3.64))),
-            azimuth=Azimuth(dms_to_radians(DMS(283, 16, 15.76))),
+            Altitude(dms_to_radians(DMS(19, 20, 3.64))),
+            Azimuth(dms_to_radians(DMS(283, 16, 15.76))),
         )
 
         result = horizon_to_equatorial_coordinates(
             coordinates,
-            Latitude(Radians(radians(52))),
+            Latitude(Radians(degrees_to_radians(Degrees(Scalar(52))))),
         )
 
         assert_angle_degrees(
@@ -183,8 +184,8 @@ class CoordinateTestMethods(unittest.TestCase):
 
     def test_ecliptic_to_equatorial_coordinates(self):
         coordinates = EclipticCoordinates(
-            latitude=Latitude(dms_to_radians(DMS(4, 52, 31))),
-            longitude=Longitude(dms_to_radians(DMS(139, 41, 10))),
+            Latitude(dms_to_radians(DMS(4, 52, 31))),
+            Longitude(dms_to_radians(DMS(139, 41, 10))),
         )
 
         result = ecliptic_to_equatorial_coordinates(
@@ -206,8 +207,8 @@ class CoordinateTestMethods(unittest.TestCase):
 
     def test_equatorial_to_ecliptic_coordinates(self):
         coordinates = EquatorialCoordinates(
-            declination=Declination(dms_to_radians(DMS(19, 32, 8.52))),
-            right_ascension=RightAscension(hms_to_radians(HMS(9, 34, 53.4))),
+            Declination(dms_to_radians(DMS(19, 32, 8.52))),
+            RightAscension(hms_to_radians(HMS(9, 34, 53.4))),
         )
 
         result = equatorial_to_ecliptic_coordinates(
@@ -229,8 +230,8 @@ class CoordinateTestMethods(unittest.TestCase):
 
     def test_equatorial_to_galactic_coordinates(self):
         coordinates = EquatorialCoordinates(
-            declination=Declination(dms_to_radians(DMS(10, 3, 11))),
-            right_ascension=RightAscension(hms_to_radians(HMS(10, 21, 0))),
+            Declination(dms_to_radians(DMS(10, 3, 11))),
+            RightAscension(hms_to_radians(HMS(10, 21, 0))),
         )
 
         result = equatorial_to_galactic_coordinates(coordinates)
@@ -249,8 +250,8 @@ class CoordinateTestMethods(unittest.TestCase):
 
     def test_galactic_to_equatorial_coordinates(self):
         coordinates = GalacticCoordinates(
-            latitude=Latitude(dms_to_radians(DMS(51, 7, 20.16))),
-            longitude=Longitude(dms_to_radians(DMS(232, 14, 52.38))),
+            Latitude(dms_to_radians(DMS(51, 7, 20.16))),
+            Longitude(dms_to_radians(DMS(232, 14, 52.38))),
         )
 
         result = galactic_to_equatorial_coordinates(coordinates)

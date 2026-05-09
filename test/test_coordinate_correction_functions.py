@@ -20,13 +20,14 @@ from astronomy_types import (
     Month,
     Radians,
     RightAscension,
+    Scalar,
     Second,
     Time,
     Year,
+    degrees_to_radians,
     dms_to_radians,
     hms_to_radians,
     DMS,
-    radians,
 )
 
 from coordinate_correction_functions import (
@@ -61,19 +62,19 @@ def assert_time_almost_equal(
 ) -> None:
     test_case.assertEqual(int(actual.hour), expected_hour)
     test_case.assertEqual(int(actual.minute), expected_minute)
-    test_case.assertAlmostEqual(float(actual.second), expected_second, places=places)
+    test_case.assertAlmostEqual(actual.second, expected_second, places=places)
 
 
 class CoordinateCorrectionTestMethods(unittest.TestCase):
     def test_angle_difference(self):
         coordinates1 = EquatorialCoordinates(
-            declination=Declination(dms_to_radians(DMS(-8, 13, 30))),
-            right_ascension=RightAscension(hms_to_radians(HMS(5, 13, 31.7))),
+            Declination(dms_to_radians(DMS(-8, 13, 30))),
+            RightAscension(hms_to_radians(HMS(5, 13, 31.7))),
         )
 
         coordinates2 = EquatorialCoordinates(
-            declination=Declination(dms_to_radians(DMS(-16, 41, 11))),
-            right_ascension=RightAscension(hms_to_radians(HMS(6, 44, 13.4))),
+            Declination(dms_to_radians(DMS(-16, 41, 11))),
+            RightAscension(hms_to_radians(HMS(6, 44, 13.4))),
         )
 
         result = angle_difference(
@@ -85,26 +86,26 @@ class CoordinateCorrectionTestMethods(unittest.TestCase):
 
     def test_rising_and_setting(self):
         coordinates = EquatorialCoordinates(
-            declination=Declination(dms_to_radians(DMS(21, 42, 0))),
-            right_ascension=RightAscension(hms_to_radians(HMS(23, 39, 20))),
+            Declination(dms_to_radians(DMS(21, 42, 0))),
+            RightAscension(hms_to_radians(HMS(23, 39, 20))),
         )
 
         location = GeographicCoordinates(
-            latitude=Latitude(Radians(radians(30))),
-            longitude=Longitude(Radians(radians(64))),
+            Latitude(Radians(degrees_to_radians(Degrees(Scalar(30))))),
+            Longitude(Radians(degrees_to_radians(Degrees(Scalar(64))))),
         )
 
         greenwich_date = Date(
             year=Year(2010),
             month=Month(8),
-            day=Day(24),
+            day=Day(Scalar(24)),
         )
 
         result = rising_and_setting(
             coordinates,
             location,
             greenwich_date,
-            Degrees(0.5667),
+            Degrees(Scalar(0.5667)),
         )
 
         # TODO: Check this in book
@@ -140,14 +141,14 @@ class CoordinateCorrectionTestMethods(unittest.TestCase):
 
     def test_precession_low_precision(self):
         coordinates = EquatorialCoordinates(
-            declination=Declination(dms_to_radians(DMS(14, 23, 25))),
-            right_ascension=RightAscension(hms_to_radians(HMS(9, 10, 43))),
+            Declination(dms_to_radians(DMS(14, 23, 25))),
+            RightAscension(hms_to_radians(HMS(9, 10, 43))),
         )
 
         result = precession_low_precision(
             coordinates,
-            Epoch(JulianDate(2433282.423)),
-            Epoch(JulianDate(2444025.5)),
+            Epoch(JulianDate(Scalar(2433282.423))),
+            Epoch(JulianDate(Scalar(2444025.5))),
         )
 
         self.assertAlmostEqual(
@@ -167,7 +168,7 @@ class CoordinateCorrectionTestMethods(unittest.TestCase):
             Date(
                 year=Year(1988),
                 month=Month(9),
-                day=Day(1),
+                day=Day(Scalar(1)),
             )
         )
 
@@ -188,18 +189,18 @@ class CoordinateCorrectionTestMethods(unittest.TestCase):
             date=Date(
                 year=Year(1988),
                 month=Month(9),
-                day=Day(8),
+                day=Day(Scalar(8)),
             ),
             time=Time(
                 hour=Hour(0),
                 minute=Minute(0),
-                second=Second(0),
+                second=Second(Scalar(0)),
             ),
         )
 
         coordinates = EclipticCoordinates(
-            latitude=Latitude(dms_to_radians(DMS(-1, 32, 56.4))),
-            longitude=Longitude(dms_to_radians(DMS(352, 37, 10.1))),
+            Latitude(dms_to_radians(DMS(-1, 32, 56.4))),
+            Longitude(dms_to_radians(DMS(352, 37, 10.1))),
         )
 
         result = aberration_from_date(

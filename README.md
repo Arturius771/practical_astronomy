@@ -50,11 +50,12 @@ pip install af_practical_astronomy
 
 Currently, you will have to manually import these functions into your project if you wish.
 
-# Future plans
+# TODO
 
 - Finish implementing all of the algorithms from the book.
   - Note: skipped section 31, matrix method for coordinate conversions. Will implement later.
 - Add a test runner.
+- Tidy up `float()` casts
 
 # Updating and Repackaging the Project with `setuptools`
 

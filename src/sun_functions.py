@@ -8,6 +8,8 @@ from time_functions import (
 from astronomy_types import (
     Date,
     Day,
+    Degrees,
+    Eccentricity,
     EclipticCoordinates,
     EquatorialCoordinates,
     FullDate,
@@ -15,8 +17,10 @@ from astronomy_types import (
     Longitude,
     Month,
     Radians,
+    Ratio,
+    Scalar,
     Year,
-    radians,
+    degrees_to_radians,
 )
 
 
@@ -25,17 +29,17 @@ def sun_longitude(
     daylight_savings_correction: int,
     timezone_correction: int,
 ) -> Longitude:
-    def sun_mean_anomaly_2010(degrees: float) -> float:
+    def sun_mean_anomaly_2010(degrees: Degrees) -> float:
         ecliptic_longitude = 279.557208
         ecliptic_longitude_of_perigee = 283.112438
 
         return degrees + ecliptic_longitude - ecliptic_longitude_of_perigee
 
-    def sun_true_anomaly_2010(mean_anomaly_degrees: float) -> float:
-        eccentricity = 0.016705
+    def sun_true_anomaly_2010(mean_anomaly: Degrees) -> float:
+        eccentricity = Eccentricity(Ratio(Scalar(0.016705)))
 
-        return mean_anomaly_degrees + (
-            (360 / math.pi) * eccentricity * math.sin(radians(mean_anomaly_degrees))
+        return mean_anomaly + (
+            (360 / math.pi) * eccentricity * math.sin(degrees_to_radians(mean_anomaly))
         )
 
     def sun_longitude_2010(true_anomaly_degrees: float) -> float:
@@ -53,25 +57,25 @@ def sun_longitude(
 
     epoch_date = greenwich_to_julian_date(
         Date(
-            year=Year(2010),
-            month=Month(1),
-            day=Day(0),
+            Year(2010),
+            Month(1),
+            Day(Scalar(0)),
         )
     )
 
     days_since_epoch = julian_date - epoch_date
 
-    mean_longitude_degrees = 360 * days_since_epoch / 365.242191
+    mean_longitude_degrees = Degrees(Scalar(360 * days_since_epoch / 365.242191))
 
     mean_anomaly = sun_mean_anomaly_2010(mean_longitude_degrees)
-    mean_anomaly_corrected = mean_anomaly % 360
+    mean_anomaly_corrected = Degrees(Scalar(mean_anomaly % 360))
 
     true_anomaly = sun_true_anomaly_2010(mean_anomaly_corrected)
 
     longitude_degrees = sun_longitude_2010(true_anomaly)
-    longitude_degrees_corrected = longitude_degrees % 360
+    longitude_degrees_corrected = Degrees(Scalar(longitude_degrees % 360))
 
-    return Longitude(Radians(radians(longitude_degrees_corrected)))
+    return Longitude(Radians(degrees_to_radians(longitude_degrees_corrected)))
 
 
 def sun_position_approximate(
@@ -93,8 +97,8 @@ def sun_position_approximate(
 
     return ecliptic_to_equatorial_coordinates(
         EclipticCoordinates(
-            latitude=Latitude(Radians(0.0)),
-            longitude=longitude,
+            Latitude(Radians(Scalar(0.0))),
+            longitude,
         ),
         greenwich_date,
     )
