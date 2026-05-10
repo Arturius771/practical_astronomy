@@ -151,7 +151,7 @@ def ecliptic_to_equatorial_coordinates(
 
     obliquity = float(mean_obliquity_ecliptic(greenwich_date))
 
-    # Existing empirical correction retained from your old code.
+    # # TODO: CHECK Existing empirical correction retained from old code.
     obliquity += degrees_to_radians(Degrees(Scalar(0.001176447533936198)))
 
     sin_declination = math.sin(ecliptic_latitude) * math.cos(obliquity) + math.cos(
