@@ -14,7 +14,7 @@ setup(
         "Programming Language :: Python :: 3",
     ],
     install_requires=[
-        "astronomy_types==2.0.0",
+        "astronomy_types==2.1.0",
     ],
     test_suite="test",
 )

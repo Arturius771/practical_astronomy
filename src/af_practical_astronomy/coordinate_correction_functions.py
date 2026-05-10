@@ -1,12 +1,12 @@
 import math
 
-from time_functions import (
+from .time_functions import (
     greenwich_sidereal_to_universal_time,
     greenwich_to_julian_date,
     julian_date_to_epoch,
     local_sidereal_to_greenwich_sidereal_time,
 )
-from sun_functions import sun_longitude
+from .sun_functions import sun_longitude
 from astronomy_types import (
     Azimuth,
     Date,
@@ -20,7 +20,6 @@ from astronomy_types import (
     Longitude,
     NutationAndObliquity,
     Obliquity,
-    Radians,
     RightAscension,
     RisingAndSetting,
     Scalar,

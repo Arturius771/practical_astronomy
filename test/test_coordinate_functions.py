@@ -33,7 +33,7 @@ from astronomy_types import (
     hms_to_radians,
 )
 
-from coordinate_functions import (
+from af_practical_astronomy.coordinate_functions import (
     ecliptic_to_equatorial_coordinates,
     equatorial_to_ecliptic_coordinates,
     equatorial_to_galactic_coordinates,

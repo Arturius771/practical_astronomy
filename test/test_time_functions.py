@@ -19,10 +19,9 @@ from astronomy_types import (
     Time,
     Year,
     degrees_to_radians,
-    radians,
 )
 
-from time_functions import (
+from af_practical_astronomy.time_functions import (
     date_of_easter,
     date_to_day_number,
     decimal_hours_to_hours_minutes_seconds,

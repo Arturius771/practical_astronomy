@@ -1,8 +1,4 @@
-// Project config settings for VSCode
 {
-  "python.analysis.extraPaths": [
-    "./test/test_",
-    "./src/af_practical_astronomy"
-  ],
-  "python.envFile": "${workspaceFolder}/.env"
+  "python.defaultInterpreterPath": "${workspaceFolder}/venv/bin/python",
+  "python.analysis.extraPaths": ["${workspaceFolder}/src"]
 }

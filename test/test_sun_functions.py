@@ -14,7 +14,7 @@ from astronomy_types import (
     Year,
 )
 
-from sun_functions import sun_position_approximate
+from af_practical_astronomy.sun_functions import sun_position_approximate
 
 
 def make_date(year: int, month: int, day: float) -> Date:

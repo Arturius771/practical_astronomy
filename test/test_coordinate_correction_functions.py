@@ -30,7 +30,7 @@ from astronomy_types import (
     DMS,
 )
 
-from coordinate_correction_functions import (
+from af_practical_astronomy.coordinate_correction_functions import (
     aberration_from_date,
     angle_difference,
     nutation_from_date,
