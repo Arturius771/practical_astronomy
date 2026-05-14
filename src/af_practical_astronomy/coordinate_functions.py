@@ -105,22 +105,29 @@ def equatorial_to_horizon_coordinates(
 
 def horizon_to_equatorial_coordinates(
     horizontal_coordinates: HorizontalCoordinates,
-    latitude: Latitude,
+    observer_latitude: Latitude,
 ) -> EquatorialCoordinatesHourAngle:
-    altitude = float(horizontal_coordinates.altitude)
-    azimuth = float(horizontal_coordinates.azimuth)
-    latitude_radians = float(latitude)
-
-    sin_declination = math.sin(altitude) * math.sin(latitude_radians) + math.cos(
-        altitude
-    ) * math.cos(latitude_radians) * math.cos(azimuth)
+    sin_declination = math.sin(horizontal_coordinates.altitude) * math.sin(
+        observer_latitude
+    ) + math.cos(horizontal_coordinates.altitude) * math.cos(
+        observer_latitude
+    ) * math.cos(
+        horizontal_coordinates.azimuth
+    )
 
     sin_declination = max(-1.0, min(1.0, sin_declination))
 
     declination = math.asin(sin_declination)
 
-    y = -math.cos(altitude) * math.cos(latitude_radians) * math.sin(azimuth)
-    x = math.sin(altitude) - math.sin(latitude_radians) * sin_declination
+    y = (
+        -math.cos(horizontal_coordinates.altitude)
+        * math.cos(observer_latitude)
+        * math.sin(horizontal_coordinates.azimuth)
+    )
+    x = (
+        math.sin(horizontal_coordinates.altitude)
+        - math.sin(observer_latitude) * sin_declination
+    )
 
     hour_angle = math.atan2(y, x) % (2 * math.pi)
 
